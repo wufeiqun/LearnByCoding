@@ -1,19 +1,15 @@
 #!/usr/bin/env python
 #coding=utf-8
-import os 
-import sys
+import os
 from fabric.api import *
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
-if sys.argv[1] in ['-h','--help']:
-	print '''
-用法:fab push:'script name','comment of the script'
-'''
-pwd = os.getcwd()
-def push(name,commit):
-	with lcd(pwd):
+def deploy(filename,commit):
+	with lcd(current_dir):
 		local('git pull')
-		local('git add "%s"' % (name))
-		local('git commit -m "%s"' % (commit))
+		local('git add '+filename)
+		local('git commit -m '+'\''+commit+'\'')
 		local('git push')
-		print 'Push successfully!!!'
+		print '-----------------------------------successlly pushed------------------------------------------------'
+	
