@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 #coding=utf-8
-import psutil
+import platform
 import datetime
+import psutil
 
 #查看CPU信息.
 print u"CPU 个数 %s"%psutil.cpu_count()  
 print u"物理CPU个数 %s"%psutil.cpu_count(logical=False) 
-
+print '系统架构为: %s' %platform.machine()
 #查看内存信息
 print u"系统总内存 %s M"%(psutil.TOTAL_PHYMEM/1024/1024)  
 print u"系统可用内存 %s M"%(psutil.avail_phymem()/1024/1024)  
@@ -26,3 +27,5 @@ net = psutil.net_io_counters()
 bytes_sent = '{0:.2f} kb'.format(net.bytes_recv / 1024)  
 bytes_rcvd = '{0:.2f} kb'.format(net.bytes_sent / 1024)  
 print u"网卡接收流量 %s 网卡发送流量 %s"%(bytes_rcvd, bytes_sent)  
+
+
