@@ -25,6 +25,15 @@ def dec2bin(num,length=None):
 		s = '0'
 	return s
 
+#二进制转ip地址.
+def bin2ip(b):
+	ip = ''
+	for i in range(0,len(b),8):
+		ip += str(int(b[i:i+8],2))+'.'
+	return ip[:-1]
+
 if __name__ == '__main__':
-	print ip2bin('192.168.1.1')
+	b = ip2bin('192.168.1.1')
+	print b
+	print bin2ip(b)
 		
