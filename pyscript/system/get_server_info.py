@@ -1,18 +1,27 @@
-#!/usr/bin/env python
-#coding=utf-8
+#get system hardware info.
+import socket
 import platform
 import datetime
 import psutil
 
-#查看CPU信息.
-print u"CPU 个数 %s"%psutil.cpu_count()  
-print u"物理CPU个数 %s"%psutil.cpu_count(logical=False) 
-print '系统架构为: %s' %platform.machine()
-#查看内存信息
-print u"系统总内存 %s M"%(psutil.TOTAL_PHYMEM/1024/1024)  
-print u"系统可用内存 %s M"%(psutil.avail_phymem()/1024/1024)  
-mem_rate = int(psutil.avail_phymem())/float(psutil.TOTAL_PHYMEM)  
-print u"系统内存使用率 %s %%"%int(mem_rate*100) 
+data = {}
+
+#get system info.
+data['hostname'] = socket.gethostname()
+data['kernel_version'] = platform.release()
+data['python_version'] = platform.python_version()
+#get cpu info.
+data['arch'] = platform.machine()
+data['logical_cpu_num'] = psutil.cpu_count()  
+data['physical_cpu_num' = psutil.cpu_count(logical=False) 
+#get mem info.
+data['memory'] = str(psutil.virtual_memory().total/1024/1024)+'M' 
+#get disk info.
+data['disk_total'] = psutil.disk_usage('/').total
+
+
+
+
 
 #查看系统的用户信息
 users_count = len(psutil.users())  
