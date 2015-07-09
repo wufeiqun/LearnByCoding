@@ -1,24 +1,25 @@
 [client]
 port		= 3306
-socket		= /home/test/mysql/mysql.sock
+socket		= /home/qfpay/mysql_master/mysql.sock
+default-character-set = utf8mb4
 # The MySQL server
 [mysqld]
 !include /etc/mysqld.cnf
 port        = 3306
-socket      = /home/test/mysql/mysql.sock
+socket      = /home/qfpay/mysql_master/mysql.sock
 skip-external-locking
 log-warnings  = 2
-log-error = /home/test/mysql/log/mysql.err
-pid-file  = /home/test/mysql/var/mysql.pid
-basedir = /home/test/mysql/
-datadir = /home/test/mysql/data/
+log-error = /home/qfpay/mysql_master/log/mysql.err
+pid-file  = /home/qfpay/mysql_master/var/mysql.pid
+basedir = /home/qfpay/mysql_master/
+datadir = /home/qfpay/mysql_master/data/
 log-queries-not-using-indexes
 long-query-time = 1
 slow-query-log = 1
-slow-query-log-file= /home/test/mysql/log/slow.log
-pid-file  = /home/test/mysql/var/mysql.pid
-tmpdir = /home/test/mysql/tmp/
-slave-load-tmpdir = /home/test/mysql/tmp/
+slow-query-log-file= /home/qfpay/mysql_master/log/slow.log
+pid-file  = /home/qfpay/mysql_master/var/mysql.pid
+tmpdir = /home/qfpay/mysql_master/tmp/
+slave-load-tmpdir = /home/qfpay/mysql_master/tmp/
 skip-name-resolve
 skip-symbolic-links
 slave-net-timeout=3
@@ -49,13 +50,13 @@ max_connections = 1000
 innodb_status_file
 innodb_buffer_pool_size = 4G
 innodb_additional_mem_pool_size = 100M
-innodb_data_home_dir  = /home/test/mysql/data/
+innodb_data_home_dir  = /home/qfpay/mysql_master/data/
 innodb_data_file_path = ibdata1:10G:autoextend
 innodb_file_io_threads  = 4
 innodb_thread_concurrency = 16
 innodb_flush_log_at_trx_commit  = 1
 innodb_log_buffer_size  = 8M
-innodb_log_group_home_dir = /home/test/mysql/data/
+innodb_log_group_home_dir = /home/qfpay/mysql_master/data/
 innodb_log_file_size  = 256M
 innodb_log_files_in_group = 2
 innodb_max_dirty_pages_pct  = 90
@@ -64,27 +65,30 @@ innodb_lock_wait_timeout  = 50
 
 server-id   = 1 
 log-bin=mysql-bin
-binlog_format=mixed
+binlog_format=row
 log-slave-updates 
 replicate-wild-ignore-table=mysql.%
 slave-skip-errors =1062
 
 
-#崩溃后刷新到磁盘,备库的配置文件，主库不用启动。
-#sync_mater_info = 1
-#sync_relay_log = 1
-#sync_relay_log_info = 1
+
+#自动删除n天前的binlog日志。默认为0不自动删除。
+#expire_logs_days=99
 
 
+character-set-server = utf8mb4
+init_connect = 'SET NAMES utf8mb4'
+character-set-client-handshake = FALSE  
+collation-server = utf8mb4_unicode_ci 
 
-#自动删除n天之前的binlog日志，防止数据过大，默认为0，不自动删除，取值范围0~99
-#expire_logs_days=3
+
 [mysqldump]
 max_allowed_packet  = 32M
 
 [mysql]
 no-auto-rehash
 max_allowed_packet  = 32M
+default-character-set = utf8mb4
 
 [myisamchk]
 key_buffer_size = 20M
