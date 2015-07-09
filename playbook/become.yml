@@ -1,6 +1,6 @@
 ---
 
-#查看命令的标准输出并返回.
+#查看命令的标准输出并返回,把程序的结果存储到register的变量里备用.
 - hosts: all
   become: true
   tasks:
@@ -8,4 +8,3 @@
       command: /usr/bin/id
       register: id
     - debug: msg="{{ id.stdout }}" 
-    #- debug: msg="{{ id.stdout }}"  
