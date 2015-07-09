@@ -1,0 +1,11 @@
+---
+
+#查看命令的标准输出并返回.
+- hosts: all
+  become: true
+  tasks:
+    - name: test become.
+      command: /usr/bin/id
+      register: id
+    - debug: msg="{{ id.stdout }}" 
+    #- debug: msg="{{ id.stdout }}"  
