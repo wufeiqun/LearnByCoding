@@ -1,0 +1,20 @@
+#this image is added sshd and a non root user/passwd.
+FROM centos:6.6
+MAINTAINER rockywu
+RUN yum update -y
+RUN mkdir /var/run/sshd
+RUN yum install -y openssh-server
+RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
+RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
+RUN /bin/sed -i 's/.*session.*required.*pam_loginuid.so.*/session optional pam_loginuid.so/g' /etc/pam.d/sshd
+RUN /bin/echo -e "LANG=\"en_US.UTF-8\"" > /etc/default/local
+RUN /etc/init.d/sshd start
+RUN useradd qfpay
+RUN echo 'qfpay:123456' | chpasswd
+
+RUN mkdir -p /home/qfpay
+RUN chown -R qfpay:qfpay /home/qfpay
+
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd", "-D"]
