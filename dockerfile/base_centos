@@ -1,20 +1,20 @@
-#this image is added sshd and a non root user/passwd.
-#
+#this image based on centos latest added sshd and a non root user/passwd.
+#update python to python2.7.8 and installed pip/supervisor.
+
 FROM centos:6
 MAINTAINER rockywu
 RUN cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum update -y
-RUN mkdir /var/run/sshd
 RUN yum groupinstall "Development tools" -y
+RUN mkdir /var/run/sshd
 RUN yum install -y epel-release tar openssh-server zlib zlib-devel openssl openssl-devel unzip mysql-devel python-devel curl 
 RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
 RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
 RUN /bin/sed -i 's/.*session.*required.*pam_loginuid.so.*/session optional pam_loginuid.so/g' /etc/pam.d/sshd
 RUN /bin/echo -e "LANG=\"en_US.UTF-8\"" > /etc/default/local
-RUN /etc/init.d/sshd start
+
 RUN useradd qfpay
 RUN echo 'qfpay:helloqfpay123' | chpasswd
-
 RUN mkdir -p /home/qfpay
 RUN chown -R qfpay:qfpay /home/qfpay
 
@@ -27,7 +27,7 @@ RUN ./configure \
 RUN sed -i 's/\/usr\/bin\/python/\/usr\/bin\/python2.6/g' /usr/bin/yum
 RUN curl -SL 'https://bootstrap.pypa.io/get-pip.py' | python
 RUN pip install supervisor
-
+COPY supervisord.conf /etc/supervisord.conf
 EXPOSE 22
 
-CMD ["/usr/sbin/sshd", "-D"]
+CMD ["supervisord","-n"]
