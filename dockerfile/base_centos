@@ -14,7 +14,7 @@ RUN /bin/sed -i 's/.*session.*required.*pam_loginuid.so.*/session optional pam_l
 RUN /bin/echo -e "LANG=\"en_US.UTF-8\"" > /etc/default/local
 
 RUN useradd qfpay
-RUN echo 'qfpay:helloqfpay123' | chpasswd
+RUN echo 'qfpay:123456' | chpasswd
 RUN mkdir -p /home/qfpay
 RUN chown -R qfpay:qfpay /home/qfpay
 
