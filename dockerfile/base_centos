@@ -1,19 +1,32 @@
 #this image is added sshd and a non root user/passwd.
-FROM centos:6.6
+#
+FROM centos:6
 MAINTAINER rockywu
+RUN cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum update -y
 RUN mkdir /var/run/sshd
-RUN yum install -y openssh-server
+RUN yum groupinstall "Development tools" -y
+RUN yum install -y epel-release tar openssh-server zlib zlib-devel openssl openssl-devel unzip mysql-devel python-devel curl 
 RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
 RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
 RUN /bin/sed -i 's/.*session.*required.*pam_loginuid.so.*/session optional pam_loginuid.so/g' /etc/pam.d/sshd
 RUN /bin/echo -e "LANG=\"en_US.UTF-8\"" > /etc/default/local
 RUN /etc/init.d/sshd start
 RUN useradd qfpay
-RUN echo 'qfpay:123456' | chpasswd
+RUN echo 'qfpay:helloqfpay123' | chpasswd
 
 RUN mkdir -p /home/qfpay
 RUN chown -R qfpay:qfpay /home/qfpay
+
+#update python
+ENV PYTHON_VERSION 2.7.8
+RUN curl -SL "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz" | tar xvzf - --strip-components=1
+RUN ./configure \
+    && make \
+    && make install 
+RUN sed -i 's/\/usr\/bin\/python/\/usr\/bin\/python2.6/g' /usr/bin/yum
+RUN curl -SL 'https://bootstrap.pypa.io/get-pip.py' | python
+RUN pip install supervisor
 
 EXPOSE 22
 
