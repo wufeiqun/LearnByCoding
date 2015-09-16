@@ -2,6 +2,13 @@
 
 - hosts: all
   become: no
+#  tasks:
+#    - name: copy directory.
+#      copy: src=/home/rocky/agent dest=/home/rocky/ owner=rocky group=rocky   
   tasks:
-    - name: copy directory.
-      copy: src=/home/rocky/agent dest=/home/rocky/ owner=rocky group=rocky mode=0644 directory_mode=0755 
+  
+     - name: chmod of a file.
+       file: path=/home/rocky/agent/{{ item.path }} mode=0755 owner=rocky group=rocky 
+       with_items:
+         - { path: 'control' } 
+         - { path: 'falcon-agent' }

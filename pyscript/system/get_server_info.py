@@ -1,3 +1,4 @@
+#coding=utf-8
 #get system hardware info.
 import socket
 import platform
@@ -13,7 +14,7 @@ data['python_version'] = platform.python_version()
 #get cpu info.
 data['arch'] = platform.machine()
 data['logical_cpu_num'] = psutil.cpu_count()  
-data['physical_cpu_num' = psutil.cpu_count(logical=False) 
+data['physical_cpu_num'] = psutil.cpu_count(logical=False) 
 #get mem info.
 data['memory'] = str(psutil.virtual_memory().total/1024/1024)+'M' 
 #get disk info.
