@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 #coding=utf-8
+#simple muti hosts login program!
 import sys
 import os
-import paramiko
 
 def ssh_connect():
 	print r'''
@@ -15,16 +15,12 @@ def ssh_connect():
 '''
 	print '''
 Please select server:
-	0: mmwd			128.199.197.146	
-	1: sdzx			118.193.81.214
-	2: aliyun		123.56.153.17
+	0: hostname	ipaddr	
 	q: quit
 '''
-	user = 'rocky'
+	user = 'test'
 	servers = {
-		'0': '128.199.197.146',
-		'1': '118.193.81.214',
-		'2': '123.56.153.17'
+		'0': 'ipaddr'
 	}
 
 	input_num = raw_input(':')
