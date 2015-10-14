@@ -1,6 +1,10 @@
+#!/usr/bin/bin python
 #coding=utf-8
+#a very fast scanning port tool!
+import time
 import socket
 import sys
+from multiprocessing import Pool,cpu_count
 
 def usage():
 	print '''
@@ -12,13 +16,15 @@ python port_scan.py ipaddr port
 
 def scan(host,port):
     s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    s.settimeout(0.1)
+    s.settimeout(0.2)
     if s.connect_ex((host,int(port))) == 0:
         print port,'is open'
 
     s.close()
 
 if __name__ == '__main__':
+    t1 = time.time()
+    pool = Pool(cpu_count())
     if len(sys.argv) == 3:
         host = sys.argv[1]
         port = sys.argv[2]
@@ -29,4 +35,9 @@ if __name__ == '__main__':
     elif len(sys.argv) == 2:
         host = sys.argv[1]
     for port in xrange(1,65536):
-        scan(host,port)
+        pool.apply_async(scan, (host,port))
+    pool.close()
+    pool.join()
+    t2 = time.time()
+    print '总共用时%0.2fs.' % (t2 - t1)
+    print '-------------------------------------------------Finish scanning!----------------------------------------------'

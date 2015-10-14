@@ -25,6 +25,7 @@ echo "-------------dependendenycis installed successful-------------"
 cd $SOFT/nginx-1.6.2
 ./configure \
 --prefix=$NGINX \
+--sbin-path=$NGINX/sbin/nginx
 --conf-path=$NGINX/conf/nginx.conf \
 --pid-path=$NGINX/logs/nginx.pid \
 --with-http_ssl_module \
