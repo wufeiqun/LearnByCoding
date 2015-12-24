@@ -1,5 +1,6 @@
 #!/home/qfpay/python/bin/python
 #coding=utf-8
+#使用方法:把这个脚本放到跟你要使用该邮件的脚本相同目录,然后直接from sendmail import send_mail,直接使用该函数即可.
 import os
 import sys
 reload(sys)
