@@ -8,10 +8,12 @@ server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 #设置地址复用,如果不设置的话,当调用socket.close()或者ctrl+c关闭服务器后还得经过TIME_WAIT的过程之后才能使用,马上启动的时候会提示端口被占用
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 #将socket绑定到指定的地址上.socket.bind(address),address必须是一个双元素元组,(host,port),如果端口号正在被使用或者保留，或者主机名或ip地址错误，则引发socke.error异常。
-server.bind(('0.0.0.0',8888))
+server_addr = ("0.0.0.0", 8888)
+server.bind(server_addr)
 #监听,准备好套接字,以便接受连接请求.括号里的参数为最大连接数,至少为1,超过则拒绝请求.
 server.listen(5)
 #这里使用了一个while循环,如果不使用的话,经过一次连接后就会关闭.
+print "Started server at %s:%s..." % server_addr
 while True:
 	#服务器套接字通过socket的accept方法等待客户连接请求,调用accept方法时，socket会进入'waiting'（或阻塞）状态。客户请求连接时，方法建立连接并返回服务器。accept方法返回一个含有俩个元素的元组，形如(connection,address)。第一个元素（connection）是新的socket对象，服务器通过它与客户通信；第二个元素（address）是客户的internet地址。
     newsocket, clientaddr = server.accept()

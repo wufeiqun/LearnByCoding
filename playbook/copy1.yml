@@ -1,7 +1,0 @@
----
-
-- hosts: mmdev02
-  become: no
-  tasks:
-    - name: copy directory.
-      copy: src=/tmp/transport/dmz02/home/qfpay dest=/tmp/transport owner=qfpay group=qfpay   
