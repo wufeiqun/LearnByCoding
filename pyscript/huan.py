@@ -1,44 +1,53 @@
 #!/usr/bin/env python
 # coding:utf-8
+from gevent import monkey
+monkey.patch_all()
+
 import urllib
+import traceback
+
 import requests
+from gevent.pool import Pool
 from openpyxl import load_workbook
 
-wb = load_workbook(filename="huan.xlsx")
-sheets = wb.get_sheet_names()
+filepath = "huan.xlsx"
+ROW = 1000
 
+wb = load_workbook(filename=filepath)
+sheets = wb.get_sheet_names()
 ws = wb.get_sheet_by_name(sheets[0])
-columns = ws.columns
-rows = ws.rows
 
 def getBaikeUrl(name):
-    url = "http://baike.baidu.com/search/word?word={0}".format(name.encode("utf-8"))
-    #resp = requests.get(url, allow_redirects=False)
+    """
+    获取每一个明星的百度百科的个人页面,从百科里面直接搜索.
+    """
+    if isinstance(name, unicode):
+        name = name.encode("utf-8")
+    url = "http://baike.baidu.com/search/word?word={0}".format(name)
     resp = requests.get(url, allow_redirects=False)
     url = resp.headers.get("Location")
+    print url
+    if "search/none" in url:
+        return None
     return url
 
-print getBaikeUrl(u"郝邵文")
-#NUM = 502
-#for i in xrange(2, NUM):
-#    name = ws["B{0}".format(i)].value
-#    url = getBaikeUrl(name)
-#    if url and ("search" not in url):
-#        ws["E{0}".format(i)].value = url
-#        print "已完成第: {0}个.".format(i)
-#
-#wb.save(filename="huan.xlsx")
+def main(row):
+    try:
+        name = ws["B{0}".format(row)].value
+    except Exception as e:
+        print traceback.print_exc(e)
+    try:
+        ws["E{0}".format(row)].value = getBaikeUrl(name)
+    except Exception as e:
+        print traceback.print_exc(e)
+    print "已完成第: {0}个.".format(row)
 
+pool = Pool(10)
 
-#n = 0
-#content = []
-#for row in rows:
-#    n += 1
-#    if not row[1].value:
-#        print n
-    #name = row[1].value
-    #url  = getBaikeUrl(name)
-    #if url:
-    #    print name
-    #    print url
+for row in xrange(550, 9999):
+    pool.spawn(main, row)
+    print "第{0}行加入队列!".format(row)
+pool.join()
+
+wb.save(filename="huan.xlsx")
 
