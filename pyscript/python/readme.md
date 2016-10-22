@@ -58,11 +58,36 @@ def func(a, L=None):
 sorted和list的内置方法sort比较:
 1. sorted返回一个新的已经排好序的list而不改变原有的list,sort方法会改变原来的数据,如果源数据不需要的话可以使用sort方法
 2. 
+3. 从python2.2开始sort和sorted都是稳定的排序
 
 
 1. 按照年龄倒排
+方法一:
 >>> home = [{"name": "Rocky", "age": 26},{"name": "Victor", "age": 24}, {"name": "Father", "age": 53}]
 >>> print sorted(home, key=lambda person: person["age"], reverse=True)
 [{'age': 53, 'name': 'Father'}, {'age': 26, 'name': 'Rocky'}, {'age': 24, 'name': 'Victor'}]
+
+方法二:
+>>>from operator import itemgetter
+>>>print sorted(home, key=itemgetter("age"), reverse=True)
+[{'age': 53, 'name': 'Father'}, {'age': 26, 'name': 'Rocky'}, {'age': 24, 'name': 'Victor'}]
+
+
+2. 按照列表中字符串所含有的感叹号的数量排序
+>>>from operator import methodcaller
+>>>messages = ['critical!!!', 'hurry!', 'standby', 'immediate!!']
+>>>sorted(messages, key=methodcaller("count", "!"))
+['standby', 'hurry!', 'immediate!!', 'critical!!!']
+
+3.体重降序 年龄升序(体重为主,年龄为次)
+
+>>>#有主次的话,先比较次优先级的然后比较主优先级的
+>>>home = [["Rocky", 26, 75], ["Victor", 24, 75], ["tony", 32, 70]]
+>>>from operator import itemgetter
+>>> s = sorted(home, key=itemgetter(1))
+>>> s
+[['Victor', 24, 75], ['Rocky', 26, 75], ['tony', 32, 70]]
+>>> sorted(s, key=itemgetter(2))
+[['tony', 32, 70], ['Victor', 24, 75], ['Rocky', 26, 75]]
 
 ```
