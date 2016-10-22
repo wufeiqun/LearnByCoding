@@ -43,5 +43,15 @@ def func(a, L=None):
     return L
 这样就不会有问题了
 
-2. optional arguments must after required arguments.non-keyword argument after a keyword argument
+2. non-keyword argument after a keyword argument;default argument must follows non-default argument;
+```
+
+#### Sort
+
+```
+1. 按照年龄倒排
+>>> home = [{"name": "Rocky", "age": 26},{"name": "Victor", "age": 24}, {"name": "Father", "age": 53}]
+>>> print sorted(home, key=lambda person: person["age"], reverse=True)
+[{'age': 53, 'name': 'Father'}, {'age': 26, 'name': 'Rocky'}, {'age': 24, 'name': 'Victor'}]
+
 ```

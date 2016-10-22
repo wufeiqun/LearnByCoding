@@ -4,10 +4,11 @@ import socket
 import time
 import threading
 
+server_addr = ('10.10.10.113',8888)
 server_addr = ('127.0.0.1',8888)
 def multi_client(uid):
     locals()["client{0}".format(uid)] = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    locals()["client{0}".format(uid)].connect(('127.0.0.1',8888))
+    locals()["client{0}".format(uid)].connect(server_addr)
     while 1:
         locals()["client{0}".format(uid)].send("Hi, Rocky {0}!".format(uid))
         time.sleep(1)
