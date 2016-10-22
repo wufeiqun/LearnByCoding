@@ -11,7 +11,7 @@ server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server_addr = ("0.0.0.0", 8888)
 server.bind(server_addr)
 #监听,准备好套接字,以便接受连接请求.括号里的参数为最大连接数,至少为1,超过则拒绝请求.
-server.listen(5)
+server.listen(1)
 #这里使用了一个while循环,如果不使用的话,经过一次连接后就会关闭.
 print "Started server at %s:%s..." % server_addr
 while True:
@@ -24,4 +24,4 @@ while True:
     print "This connection's fd is {}".format(newsocket.fileno())
     #服务端调用send方法发送信息给客户端.
     newsocket.send(data)
-    newsocket.close()
+    #newsocket.close()
