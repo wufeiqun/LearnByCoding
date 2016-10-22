@@ -55,6 +55,11 @@ def func(a, L=None):
 #### Sort
 
 ```
+sorted和list的内置方法sort比较:
+1. sorted返回一个新的已经排好序的list而不改变原有的list,sort方法会改变原来的数据,如果源数据不需要的话可以使用sort方法
+2. 
+
+
 1. 按照年龄倒排
 >>> home = [{"name": "Rocky", "age": 26},{"name": "Victor", "age": 24}, {"name": "Father", "age": 53}]
 >>> print sorted(home, key=lambda person: person["age"], reverse=True)
