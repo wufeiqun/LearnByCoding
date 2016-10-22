@@ -44,6 +44,12 @@ def func(a, L=None):
 这样就不会有问题了
 
 2. non-keyword argument after a keyword argument;default argument must follows non-default argument;
+
+
+# If arguments are not available separately, write the function call with the *-operator to unpack the arguments out of a list or tuple:
+>>>args = [3, 6]
+>>>range(*args)
+[3, 4, 5]
 ```
 
 #### Sort
