@@ -43,5 +43,5 @@ def func(a, L=None):
     return L
 这样就不会有问题了
 
-2. optional arguments must after required arguments.
+2. optional arguments must after required arguments.non-keyword argument after a keyword argument
 ```
