@@ -1,0 +1,6 @@
+beautifulsoup4==4.5.1
+bs4==0.0.1
+gevent==1.1.2
+greenlet==0.4.10
+lxml==3.6.4
+requests==2.11.1
