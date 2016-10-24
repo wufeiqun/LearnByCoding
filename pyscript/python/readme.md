@@ -91,3 +91,20 @@ sorted和list的内置方法sort比较:
 [['tony', 32, 70], ['Victor', 24, 75], ['Rocky', 26, 75]]
 
 ```
+
+#### data structures
+
+```
+# list
+1. list append quivalent a[len(a):] = [x]
+
+>>> lst = [1,2,3,4]
+>>>lst[len(lst):] = [5,6]
+>>>lst
+>>>[1,2,3,4,5,6]
+>>>lst[:2] = [9,8]
+>>>lst
+[9,8,3,4,5,6]
+
+
+```
