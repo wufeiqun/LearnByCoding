@@ -50,6 +50,18 @@ def func(a, L=None):
 >>>args = [3, 6]
 >>>range(*args)
 [3, 4, 5]
+
+```
+
+1. 求两个长度相同的list个对应元素之和
+
+```
+之前比较年轻,使用遍历的笨办法,这次试用map
+
+x, y = range(1, 5), range(5, 9)
+map(lambda a,b: a+b, x, y)
+
+[6, 8, 10, 12]
 ```
 
 #### Sort
