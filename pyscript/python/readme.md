@@ -92,7 +92,7 @@ set([1, 2, 3])
 * zip使用方法
 ```
 x = ["Rocky", "Victor", "Huan"]
-y = [26, 24, 25]
+y = [26, 24, 25, 100]
 zip(x, y)
 [("Rocky", 26), ("Victor", 24), ("Huan", 25)]
 
@@ -107,6 +107,37 @@ Victor 24
 Huan 25
 
 ```
+
+* enumerate
+```
+>>> x = ["Rocky", "Victor", "Huan"]
+>>> for k,v in enumerate(x):
+...     print k,v
+
+0 Rocky
+1 Victor
+2 Huan
+
+```
+
+* assign the result of a comparison or other Boolean expression to a variable
+```
+工作中经常会遇到这样一种情况,有三个变量x,y,z,如果x符合条件(这里以是否为空来测试)就返回x,然后再看看y是否符合,如果符合就返回,再看看z
+一般的做法是:
+if x:
+    return x
+elif y:
+    return x
+elif z:
+    return z
+
+其实可以更简洁:
+r = x or y or z
+return r
+
+
+```
+
 
 
 
