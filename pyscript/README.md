@@ -1,2 +1,1 @@
-# pyscript
-scripts on the way of learning python !some sample python scripts!!
+我整理的常用python小工具和一些不错的代码!

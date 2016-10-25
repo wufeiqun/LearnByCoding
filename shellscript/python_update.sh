@@ -19,7 +19,7 @@ echo "--------------------mkdir successfully----------------------"
 #install the essential libs.some of them is chooseable.gcc is needed.
 yum install -y epel-release
 yum -y   groupinstall 'Development tools'
-yum  -y  install gcc zlib-devel openssl-devel  bzip2-devel  wget readline-devel
+yum  -y  install gcc zlib-devel openssl-devel  bzip2-devel  wget readline-devel sqlite-devel
 sleep 5
 echo "--------------------update system finished!!--------------------"
 #download python2.7.8 from source.
