@@ -1,6 +1,6 @@
 #### import 使用说明
 
-* `from aa import *`
+* `from aa import * (不推荐使用)`
 
 ```
 $cat aa.py
