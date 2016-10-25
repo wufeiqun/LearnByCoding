@@ -83,6 +83,10 @@ reduce(lambda x, y: x*y, [1,2,3,4,5])
 ```
 >>> [(x, y) for x in [1,2,3] for y in [3,1,4] if x != y]
 [(1, 3), (1, 4), (2, 3), (2, 1), (2, 4), (3, 1), (3, 4)]
+
+>>> {x for x in [1,2,3,1,2,3]}
+set([1, 2, 3])
+
 ```
 
 * zip使用方法
@@ -148,8 +152,8 @@ sorted和list的内置方法sort比较:
 
 #### data structures
 
+* List
 ```
-# list
 1. list append quivalent a[len(a):] = [x]
 
 >>> lst = [1,2,3,4]
@@ -163,5 +167,35 @@ sorted和list的内置方法sort比较:
 >>> lst
 [9,5,6]
 
+```
+
+* Tuple
+```
+>>>x = "Rocky"
+>>>len(x)
+5
+>>>x = "Rocky",    # 注意后面有一个逗号
+>>>len(x)
+1
+>>>x = 1, 2, "Hi"
+>>>x
+(1, 2, "Hi")
+>>>a, b, c = x
+>>>a, b, c
+1, 2, "Hi"
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
