@@ -85,6 +85,24 @@ reduce(lambda x, y: x*y, [1,2,3,4,5])
 [(1, 3), (1, 4), (2, 3), (2, 1), (2, 4), (3, 1), (3, 4)]
 ```
 
+* zip使用方法
+```
+x = ["Rocky", "Victor", "Huan"]
+y = [26, 24, 25]
+zip(x, y)
+[("Rocky", 26), ("Victor", 24), ("Huan", 25)]
+
+dict(zip(x, y))
+{"Rocky": 26, "Victor": 24, "Huan": 25}
+
+for k, v in zip(x, y):
+    print k, v
+
+Rocky  26
+Victor 24
+Huan 25
+
+```
 
 
 
