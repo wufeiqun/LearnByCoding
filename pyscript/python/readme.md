@@ -223,6 +223,11 @@ sorted和list的内置方法sort比较:
 >>>y = 98.76543
 >>>"{0:.2f}   {1:.2f}".format(x, y)
 123.45    98.76
+
+>>> name = "Rocky"
+>>> age = 26
+>>> "{0:10} ==> {1:10d}".format(name, age)
+'Rocky      ==>         26'
 ```
 
 
