@@ -146,8 +146,7 @@ return r
 ```
 sorted和list的内置方法sort比较:
 1. sorted返回一个新的已经排好序的list而不改变原有的list,sort方法会改变原来的数据,如果源数据不需要的话可以使用sort方法
-2. 
-3. 从python2.2开始sort和sorted都是稳定的排序
+2. 从python2.2开始sort和sorted都是稳定的排序
 
 
 1. 按照年龄倒排
@@ -178,6 +177,34 @@ sorted和list的内置方法sort比较:
 [['Victor', 24, 75], ['Rocky', 26, 75], ['tony', 32, 70]]
 >>> sorted(s, key=itemgetter(2))
 [['tony', 32, 70], ['Victor', 24, 75], ['Rocky', 26, 75]]
+
+4. 给如下的list排序(不区分大小写)
+
+x = ["a", "b", "C", "D"]
+
+sorted(x)
+["C", "D", "a", "b"] #sorted对于字母/单词的默认排序顺序是按照字母的ASCII表,大写字母都小于小写字母
+方法一:
+sorted接收一个cmp参数,这个参数是传一个拥有两个参数的函数,比如说x, y,如果x小于y的话返回负数一般为-1,x大于y的话返回正数一般为1,相等的话返回0
+我们可以重写这个函数,如下
+def cmp(x, y):
+    if x.lower() < y.lower():
+        return -1
+    elif x.lower() > y.lower():
+        return 1
+    return 0
+
+sorted(x, cmp=cmp)
+["a", "b", "C", "D"]  #如果要倒序的话可以让上面的函数相反地返回,该返回-1的返回1即可或者使用reverse参数为True即可
+
+方法二(推荐):
+To use key= custom sorting, remember that you provide a function that takes one value and returns the proxy value to guide the sorting.
+
+sorted(x, key=str.lower)
+["a", "b", "C", "D"]
+
+
+
 
 ```
 
