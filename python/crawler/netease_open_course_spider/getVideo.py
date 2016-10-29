@@ -18,7 +18,7 @@ headers = {
         "Cache-Control": "no-cache",
         "Connection": "keep-alive",
         "Cookie": "",
-        "DNT": 1,
+        "DNT": "1",
         "Host": "open.163.com",
         "Pragma": "no-cache",
         "Referer": "http://open.163.com/",
