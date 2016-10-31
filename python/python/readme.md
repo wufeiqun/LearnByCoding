@@ -138,6 +138,17 @@ return r
 
 ```
 
+#### Iterator and Generator
+
+```
+1. 自己实现一个iterator以及一个倒序iterator
+class Iterator(object):
+    def 
+
+
+
+
+```
 
 
 
