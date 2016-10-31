@@ -269,7 +269,16 @@ sorted(x, key=str.lower)
 ```
 
 
+#### Built-in Functions
 
+* issubclass(A, B) 或者 issubclass(A, (B, C)) (B, C是或的关系)
+```
+判断某一个类是不是另一个类的子类,比如:
+from collections import defaultdict
+issubclass(defaultdict, dict)
+True
+
+```
 
 
 
