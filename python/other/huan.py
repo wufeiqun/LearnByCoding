@@ -37,14 +37,14 @@ def main(row):
     except Exception as e:
         print traceback.print_exc(e)
     try:
-        ws["E{0}".format(row)].value = getBaikeUrl(name)
+        ws["G{0}".format(row)].value = getBaikeUrl(name)
     except Exception as e:
         print traceback.print_exc(e)
     print "已完成第: {0}个.".format(row)
 
 pool = Pool(10)
 
-for row in xrange(550, 9999):
+for row in xrange(1700, 2400):
     pool.spawn(main, row)
     print "第{0}行加入队列!".format(row)
 pool.join()
