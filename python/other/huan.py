@@ -3,6 +3,7 @@
 from gevent import monkey
 monkey.patch_all()
 
+import json
 import urllib
 import traceback
 
@@ -10,14 +11,8 @@ import requests
 from gevent.pool import Pool
 from openpyxl import load_workbook
 
-filepath = "huan.xlsx"
-ROW = 1000
 
-wb = load_workbook(filename=filepath)
-sheets = wb.get_sheet_names()
-ws = wb.get_sheet_by_name(sheets[0])
-
-def getBaikeUrl(name):
+def get_baike_url(name):
     """
     获取每一个明星的百度百科的个人页面,从百科里面直接搜索.
     """
@@ -25,29 +20,45 @@ def getBaikeUrl(name):
         name = name.encode("utf-8")
     url = "http://baike.baidu.com/search/word?word={0}".format(name)
     resp = requests.get(url, allow_redirects=False)
-    url = resp.headers.get("Location")
-    print url
-    if "search/none" in url:
-        return None
+    url = resp.headers.get("Location") if not "search/none" in resp.headers.get("Location") else None
     return url
 
-def main(row):
-    try:
-        name = ws["B{0}".format(row)].value
-    except Exception as e:
-        print traceback.print_exc(e)
-    try:
-        ws["G{0}".format(row)].value = getBaikeUrl(name)
-    except Exception as e:
-        print traceback.print_exc(e)
-    print "已完成第: {0}个.".format(row)
 
-pool = Pool(10)
+class Actor(object):
+    def __init__(self):
+        self.file_name = "huan.xlsx"
+        self.work_book = load_workbook(filename=self.file_name)
+        self.sheets = self.work_book.get_sheet_names()
+        self.work_sheet = self.work_book.get_sheet_by_name(self.sheets[0])
 
-for row in xrange(1700, 2400):
-    pool.spawn(main, row)
-    print "第{0}行加入队列!".format(row)
-pool.join()
+    def tv(self, row):
+        try:
+            tv_name = []
+            for col in ["L", "M", "N", "O"]:
+                col_name = self.work_sheet["{0}{1}".format(col, row)].value
+                if col_name:
+                    tv_name.extend(col_name.split(","))
+            tv_name = list(set(tv_name))
+            print json.dumps(tv_name, encoding="utf-8", ensure_ascii=False)
+        except Exception as e:
+            print traceback.print_exc(e)
+        #try:
+        #    ws["E{0}".format(row)].value = getBaikeUrl(name)
+        #except Exception as e:
+        #    print traceback.print_exc(e)
+        #print "已完成第: {0}个.".format(row)
 
-wb.save(filename="huan.xlsx")
 
+actor =Actor()
+
+def main():
+    pool = Pool(10)
+    for row in xrange(2, 5):
+        pool.spawn(actor.tv, (row))
+        print "第{0}行加入队列!".format(row)
+    pool.join()
+    #wb.save(filename="huan.xlsx")
+
+
+if __name__ == "__main__":
+    main()
