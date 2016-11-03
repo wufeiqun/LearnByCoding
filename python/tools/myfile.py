@@ -32,5 +32,5 @@ if __name__ == "__main__":
         cmd = "curl -T {filename} {url}".format(filename=sys.argv[2], url=UPLOAD_URL)
     elif sys.argv[1] in ("d", "down"):
         cmd = "wget {url}{filename}".format(filename=sys.argv[2], url=UPLOAD_URL)
-    print "**" * 10 + DOWNLOAD_URL+sys.argv[1] + "**" * 10
+    print "**" * 10 + DOWNLOAD_URL+sys.argv[2] + "**" * 10
     run_cmd(cmd)
