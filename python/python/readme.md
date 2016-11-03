@@ -276,6 +276,8 @@ sorted(x, key=str.lower)
 >>> age = 26
 >>> "{0:10} ==> {1:10d}".format(name, age)
 'Rocky      ==>         26'
+>>>"{0:.2f}s vs {1:.3f}s".format(1.234, 1.234)
+1.23s vs 1.234s
 ```
 
 
