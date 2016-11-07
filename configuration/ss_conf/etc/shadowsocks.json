@@ -1,0 +1,8 @@
+{
+    "server":"208.110.83.242",
+    "server_port":43202,
+    "local_port":1080,
+    "password":"sonydafahaoMA2",
+    "timeout":600,
+    "method":"aes-256-cfb"
+}
