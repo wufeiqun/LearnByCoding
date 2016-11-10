@@ -26,8 +26,9 @@ iptables -t nat -A SHADOWSOCKS -d 224.0.0.0/4 -j RETURN
 iptables -t nat -A SHADOWSOCKS -d 240.0.0.0/4 -j RETURN
 
 #Create chnroute ipset
+ipset destroy chnset
 ipset create chnset hash:net
-for i in `/etc/chinadns_chnroute.txt`; do ipset add chnset $i ; done
+for i in `cat /etc/chinadns_chnroute.txt`; do ipset add chnset $i ; done
 
 #Ignore ipset ips
 iptables -t nat -A SHADOWSOCKS -m set --match-set chnset dst -j RETURN
