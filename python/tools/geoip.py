@@ -34,10 +34,17 @@ class Parser(object):
         print "**" * 10 + "ip.cn" + "**" * 10
         self.ipcn()
 
+def user_input():
+    data = sys.argv[1:]
+    if not sys.stdin.isatty():
+        data.append(sys.stdin.read())
+    return "".join(data)
+
 
 if __name__ == "__main__":
-    if len(sys.argv) == 2:
-        p = Parser(sys.argv[1])
+    ip = user_input()
+    if ip:
+        p = Parser(ip.strip())
         p.main()
     else:
         print "python ip.py 8.8.8.8"
