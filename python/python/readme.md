@@ -1,5 +1,9 @@
 ### Learn Python By Coding
 
+#### Goal
+* Writing python code shorter, faster and more readable at the same time
+
+
 #### Function
 
 ```
