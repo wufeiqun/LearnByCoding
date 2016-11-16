@@ -143,6 +143,7 @@ return r
 ```
 
 * 三目运算符
+
 ```
 x = "A" if 1>0 else "B"
 "A"
@@ -152,29 +153,24 @@ y = 1/0 if 0 else 1
 ```
 
 
-#### Iterator and Generator
-
-```
-1. 自己实现一个iterator以及一个倒序iterator
-class Iterator(object):
-    def 
 
 
-
-
-```
 
 
 
 #### Sort
 
-```
+
 sorted和list的内置方法sort比较:
-1. sorted返回一个新的已经排好序的list而不改变原有的list,sort方法会改变原来的数据,如果源数据不需要的话可以使用sort方法
-2. 从python2.2开始sort和sorted都是稳定的排序
 
+```
+* sorted返回一个新的已经排好序的list而不改变原有的list,sort方法会改变原来的数据,如果源数据不需要的话可以使用sort方法
+* 从python2.2开始sort和sorted都是稳定的排序
+```
 
-1. 按照年龄倒排
+* 按照年龄倒排
+
+```python
 方法一:
 >>> home = [{"name": "Rocky", "age": 26},{"name": "Victor", "age": 24}, {"name": "Father", "age": 53}]
 >>> print sorted(home, key=lambda person: person["age"], reverse=True)
@@ -184,17 +180,21 @@ sorted和list的内置方法sort比较:
 >>>from operator import itemgetter
 >>>print sorted(home, key=itemgetter("age"), reverse=True)
 [{'age': 53, 'name': 'Father'}, {'age': 26, 'name': 'Rocky'}, {'age': 24, 'name': 'Victor'}]
+```
 
+* 按照列表中字符串所含有的感叹号的数量排序
 
-2. 按照列表中字符串所含有的感叹号的数量排序
+```python
 >>>from operator import methodcaller
 >>>messages = ['critical!!!', 'hurry!', 'standby', 'immediate!!']
 >>>sorted(messages, key=methodcaller("count", "!"))
 ['standby', 'hurry!', 'immediate!!', 'critical!!!']
+```
 
-3.体重降序 年龄升序(体重为主,年龄为次)
+* 体重降序 年龄升序(体重为主,年龄为次)
 
->>>#有主次的话,先比较次优先级的然后比较主优先级的
+```python
+#有主次的话先比较次优先级的然后比较主优先级的
 >>>home = [["Rocky", 26, 75], ["Victor", 24, 75], ["tony", 32, 70]]
 >>>from operator import itemgetter
 >>> s = sorted(home, key=itemgetter(1))
@@ -202,9 +202,11 @@ sorted和list的内置方法sort比较:
 [['Victor', 24, 75], ['Rocky', 26, 75], ['tony', 32, 70]]
 >>> sorted(s, key=itemgetter(2))
 [['tony', 32, 70], ['Victor', 24, 75], ['Rocky', 26, 75]]
+```
 
-4. 给如下的list排序(不区分大小写)
+* 给如下的list排序(不区分大小写)
 
+```python
 x = ["a", "b", "C", "D"]
 
 sorted(x)
@@ -228,15 +230,13 @@ To use key= custom sorting, remember that you provide a function that takes one 
 sorted(x, key=str.lower)
 ["a", "b", "C", "D"]
 
-
-
-
 ```
 
 #### data structures
 
 * List
-```
+
+```python
 1. list append quivalent a[len(a):] = [x]
 
 >>> lst = [1,2,3,4]
@@ -253,7 +253,8 @@ sorted(x, key=str.lower)
 ```
 
 * Tuple
-```
+
+```python
 >>>x = "Rocky"
 >>>len(x)
 5
@@ -270,7 +271,8 @@ sorted(x, key=str.lower)
 ```
 
 * String
-```
+
+```python
 >>>x = 123.4567
 >>>y = 98.76543
 >>>"{0:.2f}   {1:.2f}".format(x, y)
@@ -282,6 +284,17 @@ sorted(x, key=str.lower)
 'Rocky      ==>         26'
 >>>"{0:.2f}s vs {1:.3f}s".format(1.234, 1.234)
 1.23s vs 1.234s
+```
+
+* dict
+
+```python
+* 把一个list变成一个dict并附件默认值
+>>>x = ["Rocky", "Tony", "Abc"]
+>>>y = dict.fromkeys(x, "www")
+>>>y
+{"Rocky": "www", "Tony": "www", "Abc": "www"}
+
 ```
 
 
