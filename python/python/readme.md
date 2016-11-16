@@ -6,7 +6,7 @@
 
 #### Function
 
-```
+```python
 # The default values are evaluated at the point of function definition in the defining scope.
 
 i = 5
@@ -57,15 +57,15 @@ def func(a, L=None):
 
 ```
 
-*. 求两个长度相同的list个对应元素之和
+*. 求多个长度相同的list个对应元素之和(假设都是整数)
 
-```
-之前比较年轻,使用遍历的笨办法,这次试用map
+```python
+#之前比较年轻,使用遍历的笨办法,这次试用map
 
-x, y = range(1, 5), range(5, 9)
-map(lambda a,b: a+b, x, y)
+x, y, z= range(1, 5), range(5, 9), range(9, 13)
+map(lambda a,b,c: a+b+c, x, y, z)
 
-[6, 8, 10, 12]
+[15, 18, 21, 24]
 ```
 
 *. 列出1-20之间能被3或者5整除的数字
