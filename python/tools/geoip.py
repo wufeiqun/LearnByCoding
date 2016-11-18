@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding:utf-8
 import sys
+import subprocess
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -19,19 +21,19 @@ class Parser(object):
         tr = table.find_all("tr")[2]
         li = tr.find_all("li")
         for i in li:
-            print i.string
+            print(i.string)
 
     def ipcn(self):
         resp = requests.get("{0}?ip={1}".format(self.ipcn_url, self.ip), headers=self.headers)
         soup = BeautifulSoup(resp.content, "lxml")
         result = soup.find_all(class_ = "well")[0].find_all("p")
         for i in result:
-            print i.text
+            print (i.text)
 
     def main(self):
-        print "**" * 10 + "ip138" + "**" * 10
+        print("**" * 10 + "ip138" + "**" * 10)
         self.ip138()
-        print "**" * 10 + "ip.cn" + "**" * 10
+        print("**" * 10 + "ip.cn" + "**" * 10)
         self.ipcn()
 
 def user_input():
@@ -47,4 +49,5 @@ if __name__ == "__main__":
         p = Parser(ip.strip())
         p.main()
     else:
-        print "python ip.py 8.8.8.8"
+        ret = subprocess.run(["curl", "-s", "ip.cn"], stdout=subprocess.PIPE).stdout.decode("utf-8")
+        print(ret)
