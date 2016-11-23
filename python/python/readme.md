@@ -268,6 +268,9 @@ sorted(x, key=str.lower)
 >>>a, b, c
 1, 2, "Hi"
 
+>>>(a, b), c = "XY", "Z"
+>>>a,b,c
+X Y Z
 ```
 
 * String
