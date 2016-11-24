@@ -43,5 +43,5 @@ def main():
 
 
 if __name__ == "__main__":
-    single_client()
-    #main()
+    #single_client()
+    main()
