@@ -271,6 +271,22 @@ sorted(x, key=str.lower)
 >>>(a, b), c = "XY", "Z"
 >>>a,b,c
 X Y Z
+
+>>> a,b,*c = range(5)
+>>> a,b,c
+(0, 1, [2, 3, 4])
+>>> a,*b,c = range(5)
+>>> a,b,c
+(0, [1, 2, 3], 4)
+>>>
+
+>>> t = [("Rocky", 26), ("Tony", 32)]
+>>> for name, age in t:
+...     print(name,age)
+...
+...
+Rocky 26
+Tony 32
 ```
 
 * String
