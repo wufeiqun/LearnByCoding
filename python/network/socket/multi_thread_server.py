@@ -20,8 +20,11 @@ class Server:
 
     def request(self, conn, addr):
         while 1:
+            print "B"
             data = conn.recv(2048)
+            print "A"
             if not data:
+                print("NO")
                 break
             print "Received data: {0} from {1}".format(data, addr)
             conn.sendall(data)
