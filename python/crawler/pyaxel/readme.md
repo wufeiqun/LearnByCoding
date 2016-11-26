@@ -44,4 +44,4 @@ TODO
 Getting help
 ---
 
-Just open an [issue]()
+Just open an [issue](https://github.com/hellorocky/LearnByCoding/issues)
