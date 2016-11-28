@@ -1,11 +1,13 @@
-### Learn Python By Coding
+Learn Python By Coding
+---
 
-#### Goal
-* Writing python code shorter, faster and more readable at the same time
+Goal
+---
+Writing python code shorter, faster and more readable at the same time
 
 
-#### Function
-
+Function
+---
 ```python
 # The default values are evaluated at the point of function definition in the defining scope.
 
@@ -153,15 +155,11 @@ y = 1/0 if 0 else 1
 ```
 
 
+Sort
+---
 
 
-
-
-
-#### Sort
-
-
-sorted和list的内置方法sort比较:
+* sorted和list的内置方法sort比较:
 
 ```
 * sorted返回一个新的已经排好序的list而不改变原有的list,sort方法会改变原来的数据,如果源数据不需要的话可以使用sort方法
@@ -232,8 +230,21 @@ sorted(x, key=str.lower)
 
 ```
 
-#### data structures
+* 时间数组排序
 
+```python
+>>> import time
+>>> timestamps = ['2011-06-2', '2011-08-05', '2011-02-04', '2010-1-14', '2010-12-13']
+>>> timestamps.sort(key=lambda x: time.mktime(time.strptime(x,"%Y-%m-%d")))
+>>> timestamps
+['2010-1-12', '2010-1-14', '2010-2-07', '2010-2-11', '2010-11-16', '2010-11-22']
+```
+
+
+
+
+data structures
+---
 * List
 
 ```python
