@@ -35,7 +35,7 @@ axel [URL]
 
 more:
 
-```python
+```
 python pyaxel.py --help
 ```
 
