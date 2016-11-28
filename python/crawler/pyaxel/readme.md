@@ -7,7 +7,7 @@ Features
 ---
 
 * Support HTTP, HTTPS protocols
-* Support multi thread and coroutine
+* Support multi thread and coroutine(todo)
 * Easy to use
 
 
@@ -24,18 +24,30 @@ Usage
 ---
 
 ```python
-python3 axel.py [URL]
+python3 pyaxel.py [URL]
 ```
 
-or put `axel.py` into your $PATH, and rename to axel, then
+or put `pyaxel.py` into your $PATH, and rename to axel, then
 
 ```python
 axel [URL]
 ```
 
+more:
+
+```python
+python pyaxel.py --help
+```
+
+ScreenShot
+---
+![basic](https://raw.githubusercontent.com/hellorocky/blog/master/picture/10.pyaxel.png)
+
+
 TODO
 ---
 
+* Show time consumption
 * Complete supporting `gevent` and `asyncio`
 * Progress bar
 * Breakpoint resume

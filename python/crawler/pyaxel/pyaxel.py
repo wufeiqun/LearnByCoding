@@ -1,4 +1,15 @@
 #!/usr/bin/env python
+"""
+Usage:
+    pyaxel.py <url>
+    pyaxel.py [--thread=<num>] <url>
+
+Options:
+    -h --help        Show this screen.
+    -V --version     Show version.
+    --thread=<num>    Thread number [default: 10].
+
+"""
 import os
 import sys
 import glob
@@ -6,11 +17,12 @@ import traceback
 import threading
 
 import requests
+from docopt import docopt
 
 
 class Downloader:
     """Light command line download accelerator"""
-    def __init__(self, url, thread_num=10):
+    def __init__(self, url, thread_num):
         self.url = url
         self.thread_num = thread_num
         self.filename = self.url.split("/")[-1]
@@ -77,11 +89,9 @@ class Downloader:
 
         self.merge()
 
+
 if __name__ == "__main__":
-    if len(sys.argv) == 2:
-        url = sys.argv[1]
-    else:
-        url = "http://dldir1.qq.com/qqfile/QQforMac/QQ_V5.2.0.dmg"
-    d = Downloader(url)
+    args = docopt(__doc__, version="0.1")
+    d = Downloader(args["<url>"], int(args["--thread"]))
     d.run()
 
