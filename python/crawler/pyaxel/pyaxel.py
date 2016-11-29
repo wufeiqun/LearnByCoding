@@ -21,6 +21,26 @@ import threading
 import requests
 from docopt import docopt
 
+def progressbar(cursor, total, prefix = '', suffix = '', decimals = 1, barLength = 100):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        cursor   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        barLength   - Optional  : character length of bar (Int)
+    """
+    formatStr = "{0:." + str(decimals) + "f}"
+    percent = formatStr.format(100 * (cursor / float(total)))
+    filledLength = int(round(barLength * cursor / float(total)))
+    bar = '█' * filledLength + '-' * (barLength - filledLength)
+    sys.stdout.write('\r%s |%s| %s%s %s' % (prefix, bar, percent, '%', suffix)),
+    if cursor == total:
+        sys.stdout.write('\n')
+    sys.stdout.flush()
+
 
 class Downloader:
     """Light command line download accelerator"""
@@ -56,6 +76,7 @@ class Downloader:
             for chunk in resp.iter_content(chunk_size=1024):
                 if chunk:
                     f.write(chunk)
+                    progressbar(f.tell(), self.alloc, prefix = "Thread{0}".format(filename), suffix = 'Complete', decimals = 1, barLength = 100)
 
     def merge(self):
         """Merge all the files orderly"""

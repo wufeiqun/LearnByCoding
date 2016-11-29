@@ -51,6 +51,7 @@ TODO
 * Complete supporting `gevent` and `asyncio`
 * Progress bar
 * Breakpoint resume
+* Ctrl+C signal handler
 
 
 Getting help
