@@ -13,6 +13,8 @@ Options:
 import os
 import sys
 import glob
+import time
+import hashlib
 import traceback
 import threading
 
@@ -23,17 +25,17 @@ from docopt import docopt
 class Downloader:
     """Light command line download accelerator"""
     def __init__(self, url, thread_num):
-        self.url = url
+        self.url        = url
         self.thread_num = thread_num
-        self.filename = self.url.split("/")[-1]
+        self.filename   = self.url.split("/")[-1]
         # Where to save the downloaded file, default is your current dir.
-        self.put_dir = "."
+        self.put_dir    = "."
         # Where to save the partial files temporary
         if "download" not in os.listdir("/tmp"):
             os.mkdir("/tmp/download")
-        self.tmp_dir = "/tmp/download"
-        self.filesize = self.get_filesize()
-        self.alloc = self.filesize // self.thread_num
+        self.tmp_dir    = "/tmp/download"
+        self.filesize   = self.get_filesize()
+        self.alloc      = self.filesize // self.thread_num
 
     def get_filesize(self):
         """Get content-length from headers"""
@@ -57,6 +59,9 @@ class Downloader:
 
     def merge(self):
         """Merge all the files orderly"""
+        # if filename exists,add suffix ".new"
+        if os.path.exists(os.path.join(self.put_dir, self.filename)):
+            self.filename = self.filename + ".new"
         new_file = open(os.path.join(self.put_dir, self.filename), "wb")
         # Order by thread id
         sorted_flist = sorted(os.listdir(self.tmp_dir), key=lambda x: int(x))
@@ -66,11 +71,16 @@ class Downloader:
                 while r:
                     new_file.write(r)
                     r = f.read(1024)
-
         new_file.close()
-
         for dirty_file in glob.glob("/tmp/download/*"):
             os.remove(dirty_file)
+
+    def md5(self, filename):
+        hash_md5 = hashlib.md5()
+        with open(filename, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
 
     def run(self):
         threads = []
@@ -86,12 +96,24 @@ class Downloader:
         print("{0} started.".format(last_thread.name))
         for thread in threads:
             thread.join()
-
+        # Merge the partial file,then delete the source partial file.
         self.merge()
+        # Checksum the md5 of the merged file
+        md5 = self.md5(self.filename)
+        print("Filename: {0} ---> MD5: {1}".format(self.filename, md5))
 
 
-if __name__ == "__main__":
+
+def main():
+    start = time.time()
     args = docopt(__doc__, version="0.1")
     d = Downloader(args["<url>"], int(args["--thread"]))
     d.run()
+    end = time.time()
+    print("Download finished with {0:.2f}s.".format(end-start))
+
+
+
+if __name__ == "__main__":
+    main()
 
