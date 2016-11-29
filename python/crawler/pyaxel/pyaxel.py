@@ -88,12 +88,10 @@ class Downloader:
             thread = threading.Thread(target=self.download, args=(n*self.alloc, n*self.alloc + self.alloc - 1))
             thread.start()
             threads.append(thread)
-            print("{0} started.".format(thread.name))
         # Last thread download all the rest
         last_thread = threading.Thread(target=self.download, name="Thread-{0}".format(self.thread_num), args=((self.thread_num-1)*self.alloc, self.filesize))
         last_thread.start()
         threads.append(last_thread)
-        print("{0} started.".format(last_thread.name))
         for thread in threads:
             thread.join()
         # Merge the partial file,then delete the source partial file.

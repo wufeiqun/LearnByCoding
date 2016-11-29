@@ -8,7 +8,8 @@ Features
 
 * Support HTTP, HTTPS protocols
 * Support multi thread and coroutine(todo)
-* Easy to use
+* MD5 checksum
+* Show time consumption
 
 
 Installation
@@ -47,7 +48,6 @@ ScreenShot
 TODO
 ---
 
-* Show time consumption
 * Complete supporting `gevent` and `asyncio`
 * Progress bar
 * Breakpoint resume
@@ -57,3 +57,10 @@ Getting help
 ---
 
 Just open an [issue](https://github.com/hellorocky/LearnByCoding/issues)
+
+Contributions
+---
+
+Thanks for some useful suggestion.
+
+https://www.v2ex.com/t/323771
