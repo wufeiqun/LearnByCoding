@@ -17,6 +17,7 @@ import time
 import hashlib
 import traceback
 import threading
+import contextlib
 import urllib.request
 
 import requests
@@ -59,25 +60,28 @@ class Downloader:
         self.alloc      = self.filesize // self.thread_num
 
     def get_filesize(self):
-        """Get content-length from headers"""
-        try:
-            resp = requests.head(self.url)
-            filesize = resp.headers["Content-Length"]
-            return int(filesize)
-        except Exception as e:
-            printf(traceback.format_exc(e))
+        """Get content-length from headers (byte)"""
+        with contextlib.closing(urllib.request.urlopen(self.url)) as fp:
+            filesize = fp.length
+            if not filesize:
+                raise KeyError("Content-Length not found from headers")
+        return filesize
 
     def download(self, start, end):
         """Download file separately"""
-        headers = {"Range":"bytes={0:d}-{1:d}".format(start, end)}
-        resp = requests.get(self.url, headers=headers, stream=True)
+        bs = 1024 * 8  # block size (byte)
+        headers = {"Range": "bytes={0:d}-{1:d}".format(start, end)}
         # Use the thread id as the partial filename, deleted after merged.
         filename = threading.current_thread().name.split("-")[1]
-        with open(os.path.join(self.tmp_dir, filename), "wb") as f:
-            for chunk in resp.iter_content(chunk_size=1024):
-                if chunk:
-                    f.write(chunk)
-                    progressbar(f.tell(), self.alloc, prefix = "Thread{0}".format(filename), suffix = 'Complete', decimals = 1, barLength = 100)
+
+        req = urllib.request.Request(self.url, headers=headers)
+        with contextlib.closing(urllib.request.urlopen(req)) as resp:
+            with open(os.path.join(self.tmp_dir, filename), "wb") as f:
+                while 1:
+                    block = resp.read(bs)
+                    if not block:
+                        break
+                    f.write(block)
 
     def merge(self):
         """Merge all the files orderly"""
@@ -135,5 +139,7 @@ def main():
 
 
 if __name__ == "__main__":
+    #d = Downloader("http://hellorfimg.zcool.cn/preview/425783590.jpg", 5)
+    #print(d.get_filesize())
     main()
 
