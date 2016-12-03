@@ -55,6 +55,7 @@ class Downloader:
         self.put_dir    = "."
         # Place to save the  temporary partial files
         self.tmp_dir    = tempfile.TemporaryDirectory()
+        print(self.tmp_dir.name)
         self.filesize   = self.get_filesize()
         self.alloc      = self.filesize // self.thread_num
 
@@ -62,7 +63,10 @@ class Downloader:
         """Get content-length from headers (byte)"""
         req = urllib.request.Request(self.url, method="HEAD")
         with contextlib.closing(urllib.request.urlopen(req)) as resp:
-            filesize = resp.length
+            # Get the real URL, useful when meet 301, 302.
+            self.real_url = resp.geturl()
+            print(self.real_url)
+            filesize = int(resp.headers.get("Content-Length"))
             if not filesize:
                 raise KeyError("Content-Length not found from headers")
         return filesize
@@ -77,7 +81,7 @@ class Downloader:
         req = urllib.request.Request(self.url, headers=headers)
 
         with contextlib.closing(urllib.request.urlopen(req)) as resp:
-            with open(os.path.join(self.tmp_dir, filename), "wb") as f:
+            with open(os.path.join(self.tmp_dir.name, filename), "wb") as f:
                 while 1:
                     block = resp.read(bs)
                     if not block:
@@ -91,17 +95,17 @@ class Downloader:
             num_files = glob.glob(os.path.join(self.put_dir, self.filename + ".*"))
             if num_files:
                 max_num = max([int(num_file.split(".")[-1]) for num_file in num_files])
-                self.filename = self.filename + str(max_num + 1)
+                self.filename = self.filename + "." + str(max_num + 1)
             else:
                 self.filename = self.filename + ".1"
 
         merged_file = open(os.path.join(self.put_dir, self.filename), "wb")
 
         # Order partial file by thread id
-        sorted_flist = sorted(os.listdir(self.tmp_dir), key=lambda x: int(x))
+        sorted_flist = sorted(os.listdir(self.tmp_dir.name), key=lambda x: int(x))
         # Merged the partial file
         for partial in sorted_flist:
-            with open(os.path.join(self.tmp_dir, partial), "br") as f:
+            with open(os.path.join(self.tmp_dir.name, partial), "br") as f:
                 while 1:
                     block = f.read(1024*8)
                     if not block:
@@ -111,10 +115,17 @@ class Downloader:
         # Clean the tmpdir
         self.tmp_dir.cleanup()
 
-    def md5(self, filename):
+    def checksum(self):
+        """Check the filesize and md5"""
+        retrive_size = os.stat(os.path.join(self.put_dir, self.filename)).st_size
+        if retrive_size < self.filesize:
+            raise ContentTooShortError(
+                    "retrieval incomplete: got only {0:d} out of {1:d} bytes"
+                    .format(retrive_size, self.filesize), (self.filename,)
+                    )
         hash_md5 = hashlib.md5()
-        with open(filename, "rb") as f:
-            for chunk in iter(lambda: f.read(4096), b""):
+        with open(os.path.join(self.put_dir, self.filename), "rb") as f:
+            for chunk in iter(lambda: f.read(1024*8), b""):
                 hash_md5.update(chunk)
         return hash_md5.hexdigest()
 
@@ -141,9 +152,9 @@ class Downloader:
             thread.join()
         # Merge the partial file,then delete the source partial file.
         self.merge()
-        # Checksum the md5 of the merged file
-        md5 = self.md5(self.filename)
-        print("Filename: {0} ---> MD5: {1}".format(self.filename, md5))
+        # Show the md5 of the merged file
+        self.md5 = self.checksum()
+
 
 
 
