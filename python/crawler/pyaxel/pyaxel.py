@@ -14,6 +14,7 @@ import os
 import sys
 import glob
 import time
+import signal
 import hashlib
 import tempfile
 import traceback
@@ -21,55 +22,45 @@ import threading
 import contextlib
 import urllib.request
 
-import requests
 from docopt import docopt
-
-def progressbar(cursor, total, prefix = '', suffix = '', decimals = 1, barLength = 100):
-    """
-    Call in a loop to create terminal progress bar
-    @params:
-        cursor   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals in percent complete (Int)
-        barLength   - Optional  : character length of bar (Int)
-    """
-    formatStr = "{0:." + str(decimals) + "f}"
-    percent = formatStr.format(100 * (cursor / float(total)))
-    filledLength = int(round(barLength * cursor / float(total)))
-    bar = '█' * filledLength + '-' * (barLength - filledLength)
-    sys.stdout.write('\r%s |%s| %s%s %s' % (prefix, bar, percent, '%', suffix)),
-    if cursor == total:
-        sys.stdout.write('\n')
-    sys.stdout.flush()
 
 
 class Downloader:
     """Light command line download accelerator"""
     def __init__(self, url, thread_num):
-        self.url        = url
+        signal.signal(signal.SIGINT, self.handler)
+        self.url        = self.get_url(url)
         self.thread_num = thread_num
         self.filename   = self.url.split("/")[-1]
         # Where to save the downloaded file, default is your current dir.
         self.put_dir    = "."
         # Place to save the  temporary partial files
         self.tmp_dir    = tempfile.TemporaryDirectory()
-        print(self.tmp_dir.name)
         self.filesize   = self.get_filesize()
         self.alloc      = self.filesize // self.thread_num
+
+    def get_url(self, url):
+        """Get real URL when status code is 301, 302, etc"""
+        req = urllib.request.Request(url, method="HEAD")
+        with contextlib.closing(urllib.request.urlopen(req)) as resp:
+            real_url = resp.geturl()
+            if url != real_url:
+                return self.get_url(real_url)
+            else:
+                return url
 
     def get_filesize(self):
         """Get content-length from headers (byte)"""
         req = urllib.request.Request(self.url, method="HEAD")
         with contextlib.closing(urllib.request.urlopen(req)) as resp:
-            # Get the real URL, useful when meet 301, 302.
-            self.real_url = resp.geturl()
-            print(self.real_url)
-            filesize = int(resp.headers.get("Content-Length"))
-            if not filesize:
-                raise KeyError("Content-Length not found from headers")
-        return filesize
+            # Check if the server support ranges(multithreading)
+            if resp.headers.get("Accept-Ranges") == "bytes" and resp.headers.get("Content-Length"):
+                filesize = int(resp.headers.get("Content-Length"))
+                return filesize
+            else:
+                print("The server does not support multithread, start common download...")
+                urllib.request.urlretrieve(self.url, os.path.join(self.put_dir, self.filename))
+
 
     def download(self, start, end):
         """Download file separately"""
@@ -80,13 +71,17 @@ class Downloader:
 
         req = urllib.request.Request(self.url, headers=headers)
 
-        with contextlib.closing(urllib.request.urlopen(req)) as resp:
-            with open(os.path.join(self.tmp_dir.name, filename), "wb") as f:
-                while 1:
-                    block = resp.read(bs)
-                    if not block:
-                        break
-                    f.write(block)
+        try:
+            with contextlib.closing(urllib.request.urlopen(req)) as resp:
+                with open(os.path.join(self.tmp_dir.name, filename), "wb") as f:
+                    while 1:
+                        block = resp.read(bs)
+                        if not block:
+                            break
+                        f.write(block)
+        except KeyboardInterrupt:
+            print("Catch KeyboardInterrupt, thread {0} will exit".format(filename))
+            sys.exit(1)
 
     def merge(self):
         """Merge all the files orderly and checksum the data"""
@@ -114,29 +109,17 @@ class Downloader:
         merged_file.close()
         # Clean the tmpdir
         self.tmp_dir.cleanup()
-
-    def checksum(self):
-        """Check the filesize and md5"""
+        # Check the filesize
         retrive_size = os.stat(os.path.join(self.put_dir, self.filename)).st_size
         if retrive_size < self.filesize:
             raise ContentTooShortError(
                     "retrieval incomplete: got only {0:d} out of {1:d} bytes"
                     .format(retrive_size, self.filesize), (self.filename,)
                     )
-        hash_md5 = hashlib.md5()
-        with open(os.path.join(self.put_dir, self.filename), "rb") as f:
-            for chunk in iter(lambda: f.read(1024*8), b""):
-                hash_md5.update(chunk)
-        return hash_md5.hexdigest()
 
-    def info(self):
-        """
-        1. real URL
-        2. filesize
-        3. filename
-        4. file MD5
-        5. time consumtion
-        """
+    def handler(self, signum, frame):
+        print("Received {0}".format(signum))
+        sys.exit(0)
 
     def run(self):
         threads = []
@@ -152,10 +135,6 @@ class Downloader:
             thread.join()
         # Merge the partial file,then delete the source partial file.
         self.merge()
-        # Show the md5 of the merged file
-        self.md5 = self.checksum()
-
-
 
 
 def main():
