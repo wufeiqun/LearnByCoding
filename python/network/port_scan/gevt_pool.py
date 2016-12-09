@@ -9,7 +9,7 @@ class Scanner:
         self.host = host
         self.timeout = timeout
 
-    def scan(port):
+    def scan(self, port):
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client.settimeout(self.timeout)
         if client.connect_ex((self.host, port)) == 0:
