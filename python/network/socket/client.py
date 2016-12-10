@@ -1,47 +1,55 @@
 #!/usr/bin/env python
 # coding: utf-8
-import socket
+import sys
 import time
-import threading
+import socket
 import signal
-
-server_addr = ('127.0.0.1',8888)
-
-def multi_client(uid):
-    locals()["client{0}".format(uid)] = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    locals()["client{0}".format(uid)].connect(server_addr)
-    while 1:
-        locals()["client{0}".format(uid)].send("Hi, Rocky {0}!".format(uid))
-        time.sleep(0.1)
-    locals()["client{0}".format(uid)].close()
-
-def single_client():
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(server_addr)
-    while 1:
-        data = "Hi, Rocky!"
-        client.sendall(data.encode())
-        print("Send data: {0} to {1}:{2}".format(data, *server_addr))
-        recv = client.recv(2048)
-        print("Received data: {0} from {1}:{2}".format(recv, *server_addr))
-        time.sleep(1)
-    client.close()
+import threading
 
 
-def main():
-    threads = []
-    for i in xrange(10):
-        t = threading.Thread(target=multi_client, name="Client thread {0}".format(i), args=(i,))
-        t.start()
-        print("Client thread: {0} has started...".format(t.name))
-        threads.append(t)
-    for thread in threads:
-        thread.join()
+class Client:
+    def __init__(self, host, port):
+        self.address = (host, port)
+        self.thread_num = 10
+        self.threads = []
 
-# register Ctrl+C signal
-#def handler(sig, frame):
+    def client(self):
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.connect(self.address)
+
+        while 1:
+            data = b"Hi, Rocky!"
+            client.sendall(data)
+            print("Send data: {0} to {1}:{2}".format(data, *self.address))
+            recv = client.recv(2048)
+            print("Received data: {0} from {1}:{2}".format(recv, *self.address))
+            time.sleep(1)
+
+    def multi_client(self, tid):
+        locals()["client{0}".format(tid)] = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        locals()["client{0}".format(tid)].connect(self.address)
+
+        while True:
+            locals()["client{0}".format(tid)].send(b"Hi, Rocky " + bytes([tid]))
+            time.sleep(0.1)
+
+    def main(self):
+        for tid in range(10):
+            thread = threading.Thread(target=self.multi_client, args=(tid,))
+            thread.start()
+            print("{0} has started...".format(thread.name))
+            self.threads.append(thread)
+
+        for thread in self.threads:
+            thread.join()
+
+    # register Ctrl+C signal
+    #def handler(sig, frame):
 
 
 if __name__ == "__main__":
-    single_client()
-    #main()
+    client = Client("127.0.0.1", 8888)
+    if len(sys.argv) < 2:
+        client.client()
+    else:
+        client.main()
