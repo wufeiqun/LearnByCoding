@@ -20,7 +20,7 @@ def single_client():
     client.connect(server_addr)
     while 1:
         data = "Hi, Rocky!"
-        client.sendall(data)
+        client.sendall(data.encode())
         print("Send data: {0} to {1}:{2}".format(data, *server_addr))
         recv = client.recv(2048)
         print("Received data: {0} from {1}:{2}".format(recv, *server_addr))
@@ -33,7 +33,7 @@ def main():
     for i in xrange(10):
         t = threading.Thread(target=multi_client, name="Client thread {0}".format(i), args=(i,))
         t.start()
-        print "Client thread: {0} has started...".format(t.name)
+        print("Client thread: {0} has started...".format(t.name))
         threads.append(t)
     for thread in threads:
         thread.join()
