@@ -18,6 +18,6 @@ class Scanner:
 
 if __name__ == "__main__":
     pool = Pool(50)
-    s = Scanner("121.42.185.92")
+    s = Scanner("123.249.94.160")
     pool.map(s.scan, range(1, 65536))
     pool.join()
