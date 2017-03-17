@@ -44,3 +44,9 @@ var arr = ["a", "b", "c"];
 arr[1] //'b'
 arr[1.0] //'b'
 //因为String(1) === String(1.0)
+
+//判断Array和Object
+var a = [1, 2, 3];
+var o = {name: "Rocky"};
+a instanceof Array;
+o instanceof Object;
