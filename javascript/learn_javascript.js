@@ -3,7 +3,7 @@ function word_max_count(word) {
     var obj = {};
     var arr = [];
 
-    for (let i=0; i<word.length; i++) {
+    for (let i=0, len=word.length; i<len; i++) {
         if (word[i] in obj) {
             obj[word[i]] += 1;
         } else {
