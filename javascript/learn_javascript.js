@@ -23,3 +23,18 @@ function word_max_count(word) {
 
 var word = "abcdfdfddddhghhjfddddddd";
 word_max_count(word)
+
+//数组的复制和引用
+var arr = ["a", "b", "c"];
+var a = arr;
+var b = arr.slice();
+arr.push("d")
+console.log(arr);
+console.log(a);
+console.log(b);
+
+//使用Array的内置方法遍历数组
+var arr = ["a", "b", "c"];
+arr.forEach(function (item, index, array) {
+    console.log(item, index)
+})
