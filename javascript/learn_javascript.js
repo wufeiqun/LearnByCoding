@@ -38,3 +38,9 @@ var arr = ["a", "b", "c"];
 arr.forEach(function (item, index, array) {
     console.log(item, index)
 })
+
+//JavaScript中Array也是对象,我们一般使用[index]的方式来取值,其实是程序自动把数字变成了字符串,如下
+var arr = ["a", "b", "c"];
+arr[1] //'b'
+arr[1.0] //'b'
+//因为String(1) === String(1.0)
