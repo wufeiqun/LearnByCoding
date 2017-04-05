@@ -21,8 +21,21 @@ function word_max_count(word) {
 
 }
 
-var word = "abcdfdfddddhghhjfddddddd";
-word_max_count(word)
+function wmc(word) {
+    var word_arr = word.split("");
+    var obj = word_arr.reduce(function(all, current) {
+        if (current in all) {
+            all[current]++;
+        } else {
+            all[current] = 1;
+        }
+        return all;
+    }, {}) //{} 是 all的初始值, 这是reduce相关知识
+    console.log(obj);
+}
+
+wmc("abcdaaaaaa")
+
 
 //数组的复制和引用
 var arr = ["a", "b", "c"];
