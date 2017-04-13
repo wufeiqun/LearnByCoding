@@ -5,7 +5,7 @@ import socket
 from gevent.pool import Pool
 
 class Scanner:
-    def __init__(self, host, timeout=0.5):
+    def __init__(self, host, timeout=0.2):
         self.host = host
         self.timeout = timeout
 
@@ -17,7 +17,7 @@ class Scanner:
         client.close()
 
 if __name__ == "__main__":
-    pool = Pool(50)
+    pool = Pool(20)
     s = Scanner("123.249.94.160")
     pool.map(s.scan, range(1, 65536))
     pool.join()
