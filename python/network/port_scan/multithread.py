@@ -7,7 +7,7 @@ class Scanner:
     def __init__(self, host):
         self.host = host
         self.timeout = 0.5
-        self.pool = ThreadPool(10)
+        self.pool = ThreadPool(100)
 
     def scan(self, port):
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -16,7 +16,7 @@ class Scanner:
             print("Port: {0} is open".format(port))
 
     def start(self):
-        self.pool.map(self.scan, range(1, 65536))
+        self.pool.map(self.scan, range(1, 10000))
         self.pool.close()
         self.pool.join()
 
