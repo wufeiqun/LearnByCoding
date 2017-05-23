@@ -29,18 +29,9 @@ var VHao = {
 			var $ = cheerio.load(html);
 			$(".list > li").each(function(index, element) {
 				var item = element.children[1];
-				var getMovieName = function(item) {
-					if (item.children[0].hasOwnProperty("data")) {
-						return item.children[0].data;
-					} else {
-						return getMovieName(item.children[0]);
-					}
-				}
-				var movieName = getMovieName(item);
+				var movieName = this.getMovieName(item);
 				var movieURL = item.attribs.href;
 				console.log(movieName + " --------> " + movieURL);
-				console.log("---------------");
-				
 				//this.getDownloadLink(movieURL, movieName);
 			})
 			
@@ -61,6 +52,13 @@ var VHao = {
 				// })
 			})
 		})
+	},
+	getMovieName: function(item) {
+		if (item.children[0].hasOwnProperty("data")) {
+			return item.children[0].data;
+		} else {
+			return getMovieName(item.children[0]);
+		}
 	},
 	start: function() {
 		var links = this.getAllPages();
