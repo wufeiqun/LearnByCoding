@@ -29,10 +29,9 @@ var VHao = {
 			var $ = cheerio.load(html);
 			$(".list > li").each(function(index, element) {
 				var item = element.children[1];
-				var movieName = this.getMovieName(item);
+				var movieName = VHao.getMovieName(item); //这里不能使用this,因为this指向element
 				var movieURL = item.attribs.href;
-				console.log(movieName + " --------> " + movieURL);
-				//this.getDownloadLink(movieURL, movieName);
+				VHao.getDownloadLink(movieURL, movieName);
 			})
 			
 		})
@@ -41,10 +40,11 @@ var VHao = {
 		request({"encoding": null, "url": url}, function(error, response, body) {
 			var html = iconv.decode(body, "gb2312");
 			var $ = cheerio.load(html);
+            console.log(url);
 			$("#endText table tbody").each(function(index, element){
 				//只获取第一个下载链接,一般为迅雷下载链接
-				var downLink = element.children[1].children[1].children[0].attribs.href;
-				console.log(name + " ---------> " + downLink);
+				//var downLink = element.children[1].children[1].children[0].attribs.href;
+				console.log(element.children[1].children[1].children)
 				// fs.appendFile(this.fileName, name + " ---------> " + downLink + "\r\n", function(error) {
 				// 	if (error) {
 				// 		console.log(error);
@@ -57,7 +57,7 @@ var VHao = {
 		if (item.children[0].hasOwnProperty("data")) {
 			return item.children[0].data;
 		} else {
-			return getMovieName(item.children[0]);
+			return VHao.getMovieName(item.children[0]);
 		}
 	},
 	start: function() {
@@ -68,5 +68,7 @@ var VHao = {
 	}
 };
 
-VHao.start();
+//VHao.start();
 // VHao.getDetailPage("http://www.6vhao.com/s/xiju/index_16.html");
+VHao.getDownloadLink("http://www.6vhao.com/dy/2017-05-21/ManHaoZhenTan.html", "xx");
+VHao.getDownloadLink("http://www.6vhao.com/gq/2017-02-28/WoQuNaEr.html", "xx");
