@@ -1,0 +1,17 @@
+{
+  "name": "6vhao",
+  "version": "1.0.0",
+  "description": "crawler the 6vhao.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "iconv-lite": "^0.4.17",
+    "request": "^2.81.0",
+    "sync-request": "^4.0.3"
+  }
+}
