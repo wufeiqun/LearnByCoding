@@ -88,6 +88,6 @@ var VHao = {
 	}
 };
 
-VHao.start();
+//VHao.start();
 // VHao.getDetailPage("http://www.6vhao.com/s/xiju/index_16.html");
-//VHao.getDownloadLink("http://www.6vhao.com/dy/2017-05-21/ManHaoZhenTan.html", "xx");
+VHao.getDownloadLink("http://www.6vhao.com/dy/2017-05-21/ManHaoZhenTan.html", "xx");
