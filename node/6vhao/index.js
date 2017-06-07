@@ -51,7 +51,8 @@ var VHao = {
                     var downDomTree = $("#endText  table  tbody tr")[0].children[1].children;
 		            for(let index = 0; index < downDomTree.length; index++) {
                         if(downDomTree[index].name === "a") {
-                            console.log(downDomTree[index].attribs.href);
+                            //console.log(downDomTree[index].attribs.href);
+                            console.log(name);
                             //fs.appendFile(this.errorFileName, name + "\r\n", function(error) {
                             //    if (error) {
                             //        console.log(error);
@@ -88,6 +89,6 @@ var VHao = {
 	}
 };
 
-//VHao.start();
-// VHao.getDetailPage("http://www.6vhao.com/s/xiju/index_16.html");
-VHao.getDownloadLink("http://www.6vhao.com/dy/2017-05-21/ManHaoZhenTan.html", "xx");
+VHao.start();
+//VHao.getDetailPage("http://www.6vhao.com/s/xiju/index_16.html");
+//VHao.getDownloadLink("http://www.6vhao.com/dy/2017-05-21/ManHaoZhenTan.html", "xx");
