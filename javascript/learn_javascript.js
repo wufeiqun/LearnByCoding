@@ -36,6 +36,15 @@ function wmc(word) {
 
 wmc("abcdaaaaaa")
 
+function wmc1(word) {
+    var obj = {};
+    var word_arr = word.split("");
+    word_arr.forEach(function(i) {
+        obj[i] = (obj[i] || 0) + 1;
+    })
+    console.log(obj)
+}
+
 
 //数组的复制和引用
 var arr = ["a", "b", "c"];
