@@ -1,0 +1,90 @@
+#!/bin/bash
+nginxd=/home/rocky/nginx/sbin/nginx
+nginx_config=/home/rocky/nginx/conf/nginx.conf
+nginx_pid=/home/rocky/nginx/logs/nginx.pid
+nginx_lock=/home/rocky/nginx/logs/nginx.lock
+
+
+# Start nginx.
+start() {
+    if [ -f $nginx_lock ] && [ -f $nginx_pid ];then
+      echo "nginx already running...."
+      return 0
+    fi
+    echo  $"Starting nginx..."
+    $nginxd -c $nginx_config
+    RETVAL=$?
+    if [ $RETVAL = 0 ];then
+        touch $nginx_lock
+        echo "nginx started!"
+        return $RETVAL
+    else
+        echo "nginx start failed!"
+        return 1
+    fi
+}
+
+# Stop nginx.
+stop() {
+    if [ ! -f $nginx_lock ] && [ ! -f $nginx_pid ];then
+      echo "nginx already stopped...."
+      return 0
+    fi
+    echo  $"Stopping nginx..."
+    $nginxd -s stop
+    RETVAL=$?
+    if [ $RETVAL = 0 ];then
+        rm -f $nginx_lock $nginx_pid
+        echo "nginx stopped!"
+        return $RETVAL
+    else
+        echo "nginx stop failed!"
+        return 1
+    fi
+}
+
+configtest() {
+  $nginxd -t -c $nginx_config
+}
+
+# Reload nginx.
+reload() {
+    echo  $"Reloading nginx... "
+    $nginxd -s reload
+    RETVAL=$?
+    return $RETVAL
+}
+
+  
+status() {
+if [ -e $nginx_lock ];then
+  echo "nginx already running...."
+  exit 0
+fi
+echo "nginx is stop!"
+}
+
+# See how we were called.
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    reload)
+	    reload
+	    ;;
+    restart)
+	    stop
+	    start
+	    ;;
+    status)
+        status
+        ;;
+    *)
+	echo $"Usage: $0 {start|stop|status|restart|reload}"
+        exit 2
+esac
+
+exit $RETVAL
