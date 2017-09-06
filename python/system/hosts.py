@@ -1,4 +1,4 @@
-# Python API for local hosts
+#coding: utf-8
 import pprint
 
 
@@ -18,29 +18,32 @@ class Hosts:
         将hosts文件转换为python对象, 方便操作, 字典,value为set
         {"192.168.1.1": {"rockywu.me", "example.com"}}
         """
+        flines = []
         with open(self.path) as f:
-            flines = f.readlines()
-        flines = [fl.strip() for fl in flines if fl]
+            lines = f.readlines()
+        for fl in lines:
+            if fl.startswith("#") or fl.startswith("::"):
+                self.unprocessed.append(fl)
+            elif fl:
+                flines.append(fl.strip())
+
         for fline in flines:
             if fline:
-                if fline.startswith("#") or fline.startswith("::"):
-                    self.unprocessed.append(fline)
-                else:
-                    ip = fline.strip().split()[0]
-                    hosts = fline.strip().split()[1:]
-                    # 添加到ip_map_host中
-                    if ip in self.ip_map_host:
-                        for host in hosts:
-                            self.ip_map_host[ip].add(host)
-                    else:
-                        self.ip_map_host[ip] = set(hosts)
-                    # 添加到host_map_ip中
+                ip = fline.strip().split()[0]
+                hosts = fline.strip().split()[1:]
+                # 添加到ip_map_host中
+                if ip in self.ip_map_host:
                     for host in hosts:
-                        if host not in self.host_map_ip:
-                            self.host_map_ip[host] = ip
-                        else:
-                            print(host)
-                            raise DuplicateKeyError()
+                        self.ip_map_host[ip].add(host)
+                else:
+                    self.ip_map_host[ip] = set(hosts)
+                # 添加到host_map_ip中
+                for host in hosts:
+                    if host not in self.host_map_ip:
+                        self.host_map_ip[host] = ip
+                    else:
+                        print(host)
+                        raise DuplicateKeyError()
         pprint.pprint(self.host_map_ip)
         pprint.pprint(self.ip_map_host)
 
