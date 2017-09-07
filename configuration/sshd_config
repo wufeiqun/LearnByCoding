@@ -1,6 +1,7 @@
 #Modified based on CentOS 7.3's sshd config.
 
 Port 22
+AddressFamily inet
 ListenAddress 0.0.0.0
 
 Protocol 2
@@ -40,7 +41,6 @@ AcceptEnv XMODIFIERS
 Subsystem	sftp	/usr/libexec/openssh/sftp-server
 
 UseDNS no
-AddressFamily inet
 PermitRootLogin no
 SyslogFacility AUTHPRIV
 PasswordAuthentication no
