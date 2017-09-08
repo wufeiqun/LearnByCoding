@@ -4,7 +4,7 @@
 #install epel-release and update.
 yum install epel-release -y && yum update -y
 yum -y   groupinstall 'Development tools'
-yum install gcc gcc-c++ make autoconf automake libtool make pcre-devel openssl-devel bison-devel patch unzip ncurses-devel zlib-devel bzip2-devel  wget readline-devel sqlite-devel telnet nc
+yum install -y gcc gcc-c++ make autoconf automake libtool make pcre-devel openssl-devel bison-devel patch unzip ncurses-devel zlib-devel bzip2-devel  wget readline-devel sqlite-devel telnet nc git htop
 
 #disable selinux
 if [ ! -f "/etc/selinux/config" ]; then 
