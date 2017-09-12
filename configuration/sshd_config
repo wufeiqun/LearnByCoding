@@ -43,4 +43,4 @@ Subsystem	sftp	/usr/libexec/openssh/sftp-server
 UseDNS no
 PermitRootLogin no
 SyslogFacility AUTHPRIV
-PasswordAuthentication no
+PasswordAuthentication yes
