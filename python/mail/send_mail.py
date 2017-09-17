@@ -14,9 +14,9 @@ class Sender:
         self.mail.login(self.sender, self.password)
 
 
-    def send(self, subject, content, receiver):
-        # 构造邮件内容
-        msg = MIMEText(content, "html", "utf-8")
+    def send(self, subject, content, receiver, subtype="plain"):
+        # 构造邮件内容, subtype常用的是plain和html(小写)
+        msg = MIMEText(content, subtype, "utf-8")
         msg["Subject"] = subject
         msg["From"] = self.sender
         msg["To"] = receiver
