@@ -1,6 +1,7 @@
 #!/home/jumpserver/python3/bin/python3
 #从多台远程机器上传输相同目录的文件到本地, 并且重命名,为了区分哪一个机器来的, 命名规则为文件名字前边加上IP地址
-
+# 这里使用的是密钥登陆, 所以没有指定账号密码, 可以修改
+# 远程的文件是通过find正则匹配到的文件列表
 import os
 import threading
 

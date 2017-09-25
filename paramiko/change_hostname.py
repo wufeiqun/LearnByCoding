@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+#coding: utf-8
+#修改本机的主机名称为eth0的网卡的IP地址(点转化为了下划线)
 import sys
 import socket
 import fcntl
@@ -6,6 +8,8 @@ import struct
 import platform
 import socket
 import subprocess
+
+iface = "eth0"
 
 def get_ip_address(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -22,7 +26,7 @@ def get_sys_version():
 
 def change():
     version = get_sys_version()
-    ip = get_ip_address("eth0")
+    ip = get_ip_address(iface)
     ip_new = ip.replace(".", "_")
     if version == "el6":
         subprocess.call(["hostname", ip_new])
@@ -38,8 +42,8 @@ def change():
         subprocess.call(["hostnamectl", "set-hostname", ip_new])
     else:
         print("{0} version unknown!".format(ip))
-        
-        
+
+
 def show():
     ip = get_ip_address("eth0")
     version = get_sys_version()
