@@ -44,8 +44,8 @@ class Hosts:
                     else:
                         print(host)
                         raise DuplicateKeyError()
-        pprint.pprint(self.host_map_ip)
-        pprint.pprint(self.ip_map_host)
+        #pprint.pprint(self.host_map_ip)
+        #pprint.pprint(self.ip_map_host)
 
     def set(self, ip, host):
         if ip in self.ip_map_host:
@@ -70,7 +70,8 @@ class Hosts:
         """保存obj到原hosts文件中"""
         flines = []
         for ip, host in self.ip_map_host.items():
-            flines.append(ip + " " + " ".join(host) + "\n")
+            if  host:
+                flines.append(ip + " " + " ".join(host) + "\n")
 
         with open(self.path, "w") as f:
             f.writelines(flines)
@@ -80,5 +81,5 @@ class Hosts:
 
 if __name__ == "__main__":
     host = Hosts(path="hosts")
-    host.set(ip="192.168.11.51", host="j.rockywu.me")
+    host.set(ip="1.1.1.1", host="wufeiqun.com")
     host.save()
