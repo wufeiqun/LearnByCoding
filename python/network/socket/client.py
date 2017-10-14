@@ -12,25 +12,20 @@ class Client:
         self.thread_num = 10
         self.threads = []
 
-    def client(self):
-        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.settimeout(100)
+    def multi_client(self, tid):
+        client = locals()["client{0}".format(tid)]
+        client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         client.connect(self.address)
+        client.settimeout(100)
 
         while True:
+            locals()["client{0}".format(tid)].send(b"Hi, Rocky " + bytes([tid]))
             data = "你好, 服务器! 现在时间是: {0}".format(time.strftime("%H:%M:%S", time.localtime()))
             client.sendall(data.encode())
             print("发送: {0}".format(data))
             recv_data = client.recv(1024)
             print("接收: {0}".format(recv_data.decode(encoding="utf-8", errors="ignore")))
             time.sleep(2)
-
-    def multi_client(self, tid):
-        locals()["client{0}".format(tid)] = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        locals()["client{0}".format(tid)].connect(self.address)
-
-        while True:
-            locals()["client{0}".format(tid)].send(b"Hi, Rocky " + bytes([tid]))
             time.sleep(0.1)
 
     def main(self):

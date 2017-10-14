@@ -4,6 +4,7 @@
 """
 import os
 import socket
+import argparse
 
 
 class  EchoServer:
@@ -11,7 +12,7 @@ class  EchoServer:
         self.pid = os.getpid()
         self.address = (host, port)
 
-    def start(self):
+    def run(self):
         # 调用socket函数创建socket对象.本例是创建了一个TCP的连接.
         server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         # 设置地址复用,如果不设置的话,当调用socket.close()或者ctrl+c关闭服务器后还得经过TIME_WAIT的过程之后才能使用,马上启动的时候会提示端口被占用
@@ -39,9 +40,12 @@ class  EchoServer:
             print("接收到来自客户端: {1}:{2}的数据: {0}".format(data.decode(), *clientaddr))
             newsocket.send("谢谢你!".encode())
         print("Connection closed from {0}:{1}".format(*clientaddr))
-        #newsocket.close()
 
 
 if __name__ == "__main__":
-    e = EchoServer("0.0.0.0", 8888)
-    e.start()
+    parser = argparse.ArgumentParser(description="简单的TCP回显服务器!")
+    parser.add_argument("--hostname", dest="hostname", default="0.0.0.0", metavar="IP", help="请输入监听的IP地址")
+    parser.add_argument("--port", dest="port", type=int, default=8888, metavar="端口", help="请输入监听的端口")
+    args = parser.parse_args()
+    e = EchoServer(args.hostname, args.port)
+    e.run()
