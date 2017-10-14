@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
 import sys
 import time
 import socket
@@ -15,15 +14,16 @@ class Client:
 
     def client(self):
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.settimeout(100)
         client.connect(self.address)
 
-        while 1:
-            data = b"Hi, Rocky!"
-            client.sendall(data)
-            print("Send data: {0} to {1}:{2}".format(data, *self.address))
-            recv = client.recv(2048)
-            print("Received data: {0} from {1}:{2}".format(recv, *self.address))
-            time.sleep(1)
+        while True:
+            data = "你好, 服务器! 现在时间是: {0}".format(time.strftime("%H:%M:%S", time.localtime()))
+            client.sendall(data.encode())
+            print("发送: {0}".format(data))
+            recv_data = client.recv(1024)
+            print("接收: {0}".format(recv_data.decode(encoding="utf-8", errors="ignore")))
+            time.sleep(2)
 
     def multi_client(self, tid):
         locals()["client{0}".format(tid)] = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -49,6 +49,7 @@ class Client:
 
 if __name__ == "__main__":
     client = Client("127.0.0.1", 8888)
+    #client = Client("150.95.155.56", 6666)
     if len(sys.argv) < 2:
         client.client()
     else:
