@@ -3,13 +3,14 @@ import sys
 import time
 import socket
 import signal
+import argparse
 import threading
 
 
 class Client:
-    def __init__(self, host, port):
+    def __init__(self, host, port, thread_num):
         self.address = (host, port)
-        self.thread_num = 10
+        self.thread_num = thread_num
         self.threads = []
 
     def client(self, tid):
@@ -26,7 +27,7 @@ class Client:
             print("接收: {0}".format(recv_data.decode(encoding="utf-8", errors="ignore")))
             time.sleep(2)
 
-    def main(self):
+    def run(self):
         for tid in range(10):
             thread = threading.Thread(target=self.client, args=(tid,))
             thread.start()
@@ -41,5 +42,10 @@ class Client:
 
 
 if __name__ == "__main__":
-    client = Client("127.0.0.1", 8888)
-    client.main()
+    parser = argparse.ArgumentParser(description="简单的TCP客户端!")
+    parser.add_argument("--hostname", dest="hostname", default="127.0.0.1", metavar="IP", help="请输入监听的IP地址")
+    parser.add_argument("--port", dest="port", type=int, default=8888, metavar="端口", help="请输入监听的端口")
+    parser.add_argument("--thread", dest="thread", type=int, default=1, metavar="线程数", help="请输入要启动的客户端线程数")
+    args = parser.parse_args()
+    client = Client(args.hostname, args.port, args.thread)
+    client.run()
