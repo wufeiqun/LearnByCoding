@@ -28,7 +28,7 @@ class Client:
             time.sleep(2)
 
     def run(self):
-        for tid in range(10):
+        for tid in range(self.thread_num):
             thread = threading.Thread(target=self.client, args=(tid,))
             thread.start()
             print("{0} has started...".format(thread.name))
