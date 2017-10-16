@@ -12,25 +12,23 @@ class Client:
         self.thread_num = 10
         self.threads = []
 
-    def multi_client(self, tid):
-        client = locals()["client{0}".format(tid)]
-        client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        client.connect(self.address)
-        client.settimeout(100)
+    def client(self, tid):
+        sock = "client{0}".format(tid)
+        locals()[sock] = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        locals()[sock].connect(self.address)
+        locals()[sock].settimeout(10)
 
         while True:
-            locals()["client{0}".format(tid)].send(b"Hi, Rocky " + bytes([tid]))
-            data = "你好, 服务器! 现在时间是: {0}".format(time.strftime("%H:%M:%S", time.localtime()))
-            client.sendall(data.encode())
+            data = "你好, 服务器! 我是: {0}, 现在时间是: {1}".format(sock, time.strftime("%H:%M:%S", time.localtime()))
+            locals()[sock].sendall(data.encode())
             print("发送: {0}".format(data))
-            recv_data = client.recv(1024)
+            recv_data = locals()[sock].recv(1024)
             print("接收: {0}".format(recv_data.decode(encoding="utf-8", errors="ignore")))
             time.sleep(2)
-            time.sleep(0.1)
 
     def main(self):
         for tid in range(10):
-            thread = threading.Thread(target=self.multi_client, args=(tid,))
+            thread = threading.Thread(target=self.client, args=(tid,))
             thread.start()
             print("{0} has started...".format(thread.name))
             self.threads.append(thread)
@@ -44,8 +42,4 @@ class Client:
 
 if __name__ == "__main__":
     client = Client("127.0.0.1", 8888)
-    #client = Client("150.95.155.56", 6666)
-    if len(sys.argv) < 2:
-        client.client()
-    else:
-        client.main()
+    client.main()

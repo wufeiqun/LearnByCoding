@@ -37,8 +37,8 @@ class  EchoServer:
             if not data:
                 break
             # 打印接收到的数据
-            print("接收到来自客户端: {1}:{2}的数据: {0}".format(data.decode(), *clientaddr))
-            newsocket.send("谢谢你!".encode())
+            print("接收到来自客户端: {1}:{2}的数据: {0}".format(data.decode(encoding="utf-8", errors="ignore"), *clientaddr))
+            newsocket.send("谢谢你!\n".encode())
         print("Connection closed from {0}:{1}".format(*clientaddr))
 
 
