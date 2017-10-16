@@ -8,9 +8,10 @@ import threading
 
 
 class Client:
-    def __init__(self, host, port, thread_num):
+    def __init__(self, host, port, thread_num, interval):
         self.address = (host, port)
         self.thread_num = thread_num
+        self.interval = interval
         self.threads = []
 
     def client(self, tid):
@@ -25,7 +26,7 @@ class Client:
             print("发送: {0}".format(data))
             recv_data = locals()[sock].recv(1024)
             print("接收: {0}".format(recv_data.decode(encoding="utf-8", errors="ignore")))
-            time.sleep(2)
+            time.sleep(self.interval)
 
     def run(self):
         for tid in range(self.thread_num):
@@ -46,6 +47,7 @@ if __name__ == "__main__":
     parser.add_argument("--hostname", dest="hostname", default="127.0.0.1", metavar="IP", help="请输入监听的IP地址")
     parser.add_argument("--port", dest="port", type=int, default=8888, metavar="端口", help="请输入监听的端口")
     parser.add_argument("--thread", dest="thread", type=int, default=1, metavar="线程数", help="请输入要启动的客户端线程数")
+    parser.add_argument("--interval", dest="interval", type=int, default=2, metavar="间隔时间(秒)", help="请输入间隔时长")
     args = parser.parse_args()
-    client = Client(args.hostname, args.port, args.thread)
+    client = Client(args.hostname, args.port, args.thread, args.interval)
     client.run()
