@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 #select是IO多路复用的一种技术, 优点是跨平台性好, 缺点是单个进程监控的fd数量有上限FD_SIZE, 一般是1024
-import sys
+import os
 import queue
 import socket
 import select
+import argparse
 
 
 class TCPServer:
     def __init__(self, host, port, timeout):
+        self.pid = os.getpid()
         self.server_address = (host, port)
         self.server = self.create_server()
         self.inputs = [self.server]
@@ -65,6 +67,7 @@ class TCPServer:
             del self.message_queues[sock]
 
     def run(self):
+        print("Started server at {0}:{1}, PID: {2}".format(*self.server_address, self.pid))
         while self.inputs:
             try:
                 readable, writable, exceptional = select.select(self.inputs, self.outputs, self.inputs, self.timeout)
@@ -83,5 +86,10 @@ class TCPServer:
 
 
 if __name__ == "__main__":
-    server = TCPServer("0.0.0.0", 8888, 10)
+    parser = argparse.ArgumentParser(description="简单的TCPServer!")
+    parser.add_argument("--hostname", dest="hostname", default="0.0.0.0", metavar="IP", help="请输入监听的IP地址")
+    parser.add_argument("--port", dest="port", type=int, default=8888, metavar="端口", help="请输入监听的端口")
+    parser.add_argument("--timeout", dest="timeout", type=int, default=10, metavar="超时时间(秒)", help="请输入超时时间")
+    args = parser.parse_args()
+    server = TCPServer(args.hostname, args.port, args.timeout)
     server.run()

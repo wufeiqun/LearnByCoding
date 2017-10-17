@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-多进程版本的回显服务,每一个请求都会创建一个新的进程去处理
+多进程版本的TCPServer
 """
 import os
 import socket
@@ -33,16 +33,16 @@ class EchoServer:
         print("Started server at {0}:{1} with pid: {2}...".format(*self.address, self.pid))
 
         while True:
-            newsocket, clientaddr = server.accept()
+            connection, client_address = server.accept()
             self.process_num += 1
-            process = multiprocessing.Process(target=self.handler, args=(newsocket, clientaddr,))
+            process = multiprocessing.Process(target=self.handler, args=(connection, client_address,))
             process.daemon = True
             process.start()
-            print("Server process {0} has started to process {1}:{2}".format(self.process_num, *clientaddr))
+            print("Server process {0} has started to process {1}:{2}".format(self.process_num, *client_address))
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="简单的TCP回显服务器!")
+    parser = argparse.ArgumentParser(description="简单的TCPServer!")
     parser.add_argument("--hostname", dest="hostname", default="0.0.0.0", metavar="IP", help="请输入监听的IP地址")
     parser.add_argument("--port", dest="port", type=int, default=8888, metavar="端口", help="请输入监听的端口")
     args = parser.parse_args()
