@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-#coding: utf-8
+#优点: 1. 相比较于select, 监控的fd没有数量限制
+#缺点: 1. 只支持Linux, MacOS和Windows不支持(Mac上测试有bug)
 import sys
 import queue
 import select

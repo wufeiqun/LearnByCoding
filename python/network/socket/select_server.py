@@ -1,52 +1,70 @@
-# !/usr/bin/env python
-"""
-基于selectors的简单的TCP回显服务
-"""
-import os
+#!/usr/bin/env python
+#select是IO多路复用的一种技术, 优点是跨平台性好, 缺点是监控的fd数量有上限FD_SIZE, 一般是1024
+import sys
+import queue
 import socket
-import selectors
+import select
 
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.setblocking(False)
 
-class  EchoServer:
-    def __init__(self, host, port):
-        self.pid = os.getpid()
-        self.address = (host, port)
-        self.selector = selectors.DefaultSelector()
+server_addr = ("0.0.0.0", 8888)
+server.bind(server_addr)
+server.listen(5)
 
-    def start(self):
-        server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        server.bind(self.address)
-        server.listen(100)
-        server.setblocking(False)
-        self.selector.register(server, selectors.EVENT_READ, self.accept)
+rlist = [server]
+wlist = []
+message_queues = {}
 
-        print("Started server at {0}:{1}, PID: {2}".format(*self.address, self.pid))
+while rlist:
+    try:
+        readable, writable, exceptional = select.select(rlist, wlist, rlist, 10)
+        if not (readable or writable or exceptional):
+            print('在指定时间内未发现活跃的socket,这里可以做一些其它的事情!')
+            continue
+    except select.error:
+        print("select error")
 
-        while True:
-            events = self.selector.select()
-            for key, mask in events:
-                callback = key.data
-                callback(key.fileobj, mask)
-
-    def accept(self, sock, mask):
-        newsock, clientaddr = sock.accept()
-        print("{0}:{1} connected!".format(*clientaddr))
-        newsock.setblocking(False)
-        self.selector.register(newsock, selectors.EVENT_READ, self.handler)
-
-    def handler(self, newsock, mask):
-        data = newsock.recv(2048)
-        if data:
-            print("Received data: {0} from {1}:{2}.".format(data, *newsock.getpeername()))
-            print("This connection's fd is {0}".format(newsock.fileno()))
-            newsock.send(data)
+    for s in readable:
+        if s is server:
+            conn, client_addr = s.accept()
+            print("{0}:{1} connected!".format(*client_addr))
+            conn.setblocking(False)
+            rlist.append(conn)
+            message_queues[conn] = queue.Queue()
         else:
-            print("Connection closed from {0}:{1}".format(*newsock.getpeername()))
-            self.selector.unregister(newsock)
-            newsock.close()
+            data = s.recv(1024)
+            if data:
+                print("Received data: {0} from {1}:{2}".format(data.decode(encoding="utf-8", errors="ignore"), *s.getpeername()))
+                message_queues[s].put("谢谢你")
+                print("Put received data to queue: {0}:{1}!".format(*s.getpeername()))
+                if s not in wlist:
+                    wlist.append(s)
+                    print("Put {0}:{1} to wlist!".format(*s.getpeername()))
+            else:
+                print("Client: {0}:{1} closed!".format(*s.getpeername()))
+                if s in wlist:
+                    wlist.remove(s)
+                rlist.remove(s)
+                s.close()
+                del message_queues[s]
+    for s in writable:
+        try:
+            next_msg = message_queues[s].get_nowait()
+        except queue.Empty:
+            #print("{0}:{1} queue empty!".format(*s.getpeername()))
+            wlist.remove(s)
+            #print("Put {0}:{1} out wlist!".format(*s.getpeername()))
+        else: # 当try语句执行的时候才执行else
+            print("sending {0} to {1}:{2}".format("谢谢你", *s.getpeername()))
+            s.send("谢谢你".encode())
+    for s in exceptional:
+        print("exceptional occur on {0}:{1}".format(*s.getpeername()))
+        rlist.remove(s)
+        if s in wlist:
+            wlist.remove(s)
+        s.close()
+        del message_queues[s]
 
 
-if __name__ == "__main__":
-    e = EchoServer("0.0.0.0", 8888)
-    e.start()
+
