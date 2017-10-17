@@ -26,8 +26,8 @@ class  EchoServer:
         print("Started server at {0}:{1}, PID: {2}".format(*self.address, self.pid))  # Tuple unpacking
         while True:
             # 服务器套接字通过socket的accept方法等待客户连接请求,调用accept方法时，socket会进入'waiting'（或阻塞）状态。客户请求连接时，方法建立连接并返回服务器。accept方法返回一个含有俩个元素的元组，形如(connection,address)。第一个元素（connection）是新的socket对象，服务器通过它与客户通信；第二个元素（address）是客户的internet地址。
-            newsocket, clientaddr = server.accept()
-            print("收到{0}:{1}的连接!".format(*clientaddr))
+            newsocket, client_address = server.accept()
+            print("收到{0}:{1}的连接!".format(*client_address))
             self.handler(newsocket, clientaddr)
 
     def handler(self, newsocket, clientaddr):
