@@ -45,6 +45,9 @@ EOF
 
 #optimized kenel
 
+#Use aliyun repo
+http://mirrors.aliyun.com/help/centos
+
 #adduser rocky
 useradd rocky
 chmod +w /etc/sudoers
