@@ -34,7 +34,7 @@ class TCPServer(object):
         server.bind(self.address)
         server.listen(100)
         self.sel.register(server, selectors.EVENT_READ, self.accept)
-        print("Started server at {0}:{1}, PID: {2}".format(*self.address, self.pid))
+        print("Started server at {1}:{2}, PID: {0}".format(self.pid, *self.address))
 
         while True:
             events = self.sel.select(timeout=100)
@@ -42,8 +42,6 @@ class TCPServer(object):
             for key, mask in events:
                 callback = key.data
                 sock = key.fileobj
-                print(sock)
-                print(type(sock))
                 callback(sock, mask)
         self.sel.close()
 
