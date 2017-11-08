@@ -1,3 +1,9 @@
+/*
+使用方法:
+	1.把编译好的二进制文件放到$PATH中.
+	2. ip (不加参数) --> 返回本机IP的归属地, ip 8.8.8.8 , ip baidu.com
+*/
+
 package main
 
 import (
@@ -16,6 +22,7 @@ import (
 
 func ip138(ip string) {
 	ip138_url := "http://www.ip138.com/ips1388.asp?ip=" + ip + "&action=2"
+
 	client := &http.Client{Timeout: 5 * time.Second}
 
 	req, err := http.NewRequest("GET", ip138_url, nil)
