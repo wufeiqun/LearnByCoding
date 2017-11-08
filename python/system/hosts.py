@@ -43,7 +43,7 @@ class Hosts:
                         self.host_map_ip[host] = ip
                     else:
                         print(host)
-                        raise DuplicateKeyError()
+                        raise DuplicateKeyError("一个域名不能解析到多个IP地址!")
         #pprint.pprint(self.host_map_ip)
         #pprint.pprint(self.ip_map_host)
 
