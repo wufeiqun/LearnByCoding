@@ -4,7 +4,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
+	//"io"
 	"net"
 	"os"
 )
@@ -39,7 +39,9 @@ func main() {
 func handle(conn net.Conn) {
 	defer conn.Close()
 	fmt.Printf("Received new connection: %s -> %s \n", conn.RemoteAddr(), conn.LocalAddr())
+	data := make([]byte, 1024*1024)
 	for {
-		io.Copy(conn, conn)
+		length, _ := conn.Read(data)
+		fmt.Println(data[:length])
 	}
 }
