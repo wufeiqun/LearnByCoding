@@ -12,7 +12,7 @@ import (
 func main() {
 
 	var (
-		host            = "39.106.97.235"
+		host            = "123.249.94.160"
 		port            = "8888"
 		server_addr     = host + ":" + port
 		file_name       string
