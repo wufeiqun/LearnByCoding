@@ -3,6 +3,6 @@
 
 lst = ["number_{0}".format(n) for n in range(1, 95)]
 
-for i in range(0, len(lst) - 1, 20):
+for i in range(0, len(lst), 20):
     print(lst[i:i+20])
     print("--" * 20)
